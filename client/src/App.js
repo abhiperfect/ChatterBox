@@ -6,6 +6,8 @@ import '@fontsource/roboto/700.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home.jsx';
 import Chat from './pages/Chat.jsx'
+import Login from "./pages/Login.jsx";
+import SignUp from "./pages/Signup.jsx";
 
 
 
@@ -14,7 +16,10 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          
           <Route path="/" element={<Chat/>}></Route>
+          <Route path="/login" element={<Login/>}></Route>
+          <Route path="/signup" element={<SignUp/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
