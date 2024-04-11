@@ -12,19 +12,21 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
+import Chip from "@mui/material/Chip";
+import MyAvatar from '../ui/icons/MyAvatar.jsx';
 
-import GroupThreeGrid from "./GroupThreeGrid";
-import SettingButton from "../ui/buttons/SettingButton";
-import MyAvatar from "../ui/icons/MyAvatar.jsx";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-function Footer({
+function HeaderOfSender({
   borderTopLeftRadius,
   borderBottomLeftRadius,
   borderTopRightRadius,
   borderBottomRightRadius,
+  handleSetToggleIsOpen,
+  handleMobileView,
 }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
@@ -53,78 +55,88 @@ function Footer({
         borderTopRightRadius: borderTopRightRadius,
         borderBottomLeftRadius: borderBottomLeftRadius,
         borderBottomRightRadius: borderBottomRightRadius,
-        padding: "5px",
-        backgroundColor: "#EF233C",
+        backgroundColor: "#EDF2F4",
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ color: "#EF233C" }}>
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {handleMobileView && (
+            <ArrowBackIosRoundedIcon
+              onClick={() => handleSetToggleIsOpen()}
+              style={{ cursor: "pointer" }}
+            />
+          )}
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+
+              textDecoration: "none",
+            }}
+          >
+            <img
+              src="./chatterboxLogo.png"
+              alt=""
+              srcset=""
+              style={{ height: "50px" }}
+            />
+          </Typography>
+
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
+
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: "flex",  md: "none", justifyContent:'center' },
+              flexGrow: 1,
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+              
+            }}
+          >
+            <img
+              src="./chatterboxLogo.png"
+              alt=""
+              srcset=""
+              style={{ height: "50px" }}
+            />
+          </Typography>
+
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <MyAvatar backgroundColor={'white'} />
+                <MyAvatar/>
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px", ml: "-5px", mt:'-10px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: "top", // Change to top
+                vertical: "top",
                 horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: "bottom", // Change to bottom
+                vertical: "top",
                 horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
@@ -142,4 +154,4 @@ function Footer({
     </AppBar>
   );
 }
-export default Footer;
+export default HeaderOfSender;

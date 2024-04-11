@@ -16,8 +16,9 @@ import AdbIcon from '@mui/icons-material/Adb';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function Header() {
+function Header({borderTopLeftRadius,borderBottomLeftRadius,borderTopRightRadius,borderBottomRightRadius}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -36,10 +37,10 @@ function Header() {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position="static"sx={{ borderTopLeftRadius:borderTopLeftRadius, borderTopRightRadius:borderTopRightRadius, borderBottomLeftRadius:borderBottomLeftRadius, borderBottomRightRadius:borderBottomRightRadius  }} >
+      <Container  maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1,  }} />
           <Typography
             variant="h6"
             noWrap
