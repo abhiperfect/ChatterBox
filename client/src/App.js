@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home.jsx';
 import Chat from './pages/Chat.jsx'
 
+
+
 function App() {
   return (
     <>

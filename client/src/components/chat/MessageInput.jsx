@@ -5,6 +5,10 @@ import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import AddIcon from "@mui/icons-material/Add";
 import MyEmojiPicker from "./MyEmojipicker.jsx";
 
+const sendSoundPath = "/sound/send.mp3";
+const receiveSoundPath = "/sound/receive.mp3";
+
+
 export default function MessageInput({ onSendMessage }) {
   const [inputValue, setInputValue] = useState("");
   const [sendButtonActive, setSendButtonActive] = useState(false);
@@ -14,6 +18,10 @@ export default function MessageInput({ onSendMessage }) {
 
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
+
+  const sendSound = new Audio(sendSoundPath);
+  const receiveSound = new Audio(receiveSoundPath);
+
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -50,6 +58,7 @@ export default function MessageInput({ onSendMessage }) {
 
   const handleSendMessage = () => {
     if (inputValue.trim() !== "") {
+      sendSound.play();
       const currentTime = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
