@@ -5,6 +5,9 @@ import ColumnsGrid from "../components/common/ColumnsGrid.jsx";
 import Grid from "@mui/material/Unstable_Grid2";
 import Header from "../components/common/Header.jsx";
 import Footer from "../components/common/Footer.jsx";
+import axios from 'axios';
+
+
 export default function Chat() {
   const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
 
@@ -71,6 +74,25 @@ export default function Chat() {
       sent_at: "11:10 AM",
     },
   ]);
+
+
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/data');
+        console.log("Server send data",response.data);
+        setData(response.data);
+      } catch (error) {
+        console.log(error.message);
+        setError(error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const findById = (id) => {
     return messages.find((message) => message.id === id);
