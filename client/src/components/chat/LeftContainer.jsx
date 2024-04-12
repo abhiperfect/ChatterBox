@@ -18,7 +18,7 @@ export default function LeftContainer({onItemClick}) {
     <>
       <div style={{ paddingLeft: "0px", paddingRight: "0px" }}>
         <SearchBar borderTopLeftRadius='20px'/>
-        <SimpleContainer backgroundColor="#cfe8fc" height="73vh">
+        <SimpleContainer backgroundColor="#cfe8fc" height="73vh" cursor='pointer'>
           <UserList onItemClick={handleItemClick}/>
           <UserList onItemClick={handleItemClick}/>
           <UserList onItemClick={handleItemClick}/>
