@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 
-export default function SimpleContainer({ children, backgroundColor, height }) {
+export default function SimpleContainer({ children, backgroundColor, height ,cursor}) {
   return (
     <React.Fragment>
       <Box sx={{ paddingLeft: 0, paddingRight: 0 }}>
         <div>
           <Box sx={{
+            cursor:cursor,
             bgcolor: backgroundColor,
             height: height,
             overflow: 'auto',
