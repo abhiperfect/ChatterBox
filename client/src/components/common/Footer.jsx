@@ -12,12 +12,12 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
-import GroupThreeGrid from "./GroupThreeGrid";
 import SettingButton from "../ui/buttons/SettingButton";
 import MyAvatar from "../ui/icons/MyAvatar.jsx";
 
-const pages = ["Products", "Pricing", "Blog"];
+
+
+const pages = ["Calls", "Status", "Setting"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Footer({
@@ -85,8 +85,11 @@ function Footer({
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
-              }}
+                display: { xs: "block", md: "none" ,},
+                ml: "-5px", mt:'-85px',
+              }
+            }
+              
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
@@ -115,7 +118,7 @@ function Footer({
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px", ml: "-5px", mt:'-10px' }}
+              sx={{ ml: "-5px", mt:'-10px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

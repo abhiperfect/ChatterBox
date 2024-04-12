@@ -96,7 +96,7 @@ function SearchBar({
         borderBottomRightRadius: borderBottomRightRadius,
         backgroundColor:'#EDF2F4',
         color:'GrayText',
-        height:'64px',
+        height:'70px',
         display:'flex',
         justifyContent:'center',
         alignItems:'center',

@@ -114,14 +114,14 @@ export default function Chat() {
       <ColumnsGrid>
         {/* For mobile devices, the LeftContainer will take the full width */}
         <Grid item xs={12} sm={4}>
-          <LeftContainer onItemClick={handleItemClick} />
+          <LeftContainer onItemClick={handleItemClick} handleMobileView={isMobileView}/>
         </Grid>
         {/* For laptops and larger screens, the LeftContainer will take 1/3 of the width */}
         <Grid
           item
           xs={12}
           sm={8}
-          sx={{ position: isMobileView ? "absolute" : "static" }}
+          sx={{ position: isMobileView ? "absolute" : "static" , bottom:'0'}}
         >
           <RightContainer
             isOpen={isRightContainerOpen}
