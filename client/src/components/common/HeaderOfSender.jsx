@@ -15,10 +15,12 @@ import AdbIcon from "@mui/icons-material/Adb";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import Chip from "@mui/material/Chip";
 import MyAvatar from '../ui/icons/MyAvatar.jsx';
-
+import ChatOption from "../ui/buttons/ChatOption.jsx";
+import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
+import VideoCallButton from "../ui/buttons/VideoCallButton.jsx";
+import CallButton from "../ui/buttons/CallButton.jsx";
 
 const pages = [];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function HeaderOfSender({
   borderTopLeftRadius,
@@ -28,6 +30,14 @@ function HeaderOfSender({
   handleSetToggleIsOpen,
   handleMobileView,
 }) {
+  const settings = [  
+    handleMobileView &&  <div style={{display:'flex'}} ><CallButton handleMobileView={handleMobileView} />
+    <VideoCallButton handleMobileView={handleMobileView} />
+    </div>  
+    
+    
+    ,"Profile", "Account", "Dashboard", "Logout"];
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -79,7 +89,7 @@ function HeaderOfSender({
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-
+              
               textDecoration: "none",
             }}
           >
@@ -88,10 +98,11 @@ function HeaderOfSender({
               alt=""
               srcset=""
               style={{ height: "50px" }}
-            />
+              />
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          </Box>
 
           <Typography
             variant="h5"
@@ -109,25 +120,26 @@ function HeaderOfSender({
               textDecoration: "none",
               
             }}
-          >
+            >
             <img
               src="./chatterboxLogo.png"
               alt=""
               srcset=""
               style={{ height: "50px" }}
-            />
+              />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+          <Box sx={{ flexGrow: 0, }}>
+            <Tooltip title="Open settings" style={{ display:'flex'}}>
+              <ChatOption/>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <MyAvatar/>
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{ mt: "60px" , }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -141,7 +153,7 @@ function HeaderOfSender({
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-            >
+              >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
