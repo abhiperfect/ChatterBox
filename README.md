@@ -38,6 +38,22 @@ ChatterBox is built using the following technologies:
   - AWS (Amazon Web Services): Cloud services provider used for hosting and deploying the application.
   - NGINX: A web server and reverse proxy server for serving static content and routing requests to the backend.
 
+
+**Why used this not that**
+WebSocket itself doesn't provide the necessary features for efficient **real-time media streaming**, such as low latency, high throughput, and support for different codecs. For video and audio calls, you'll typically want to use specialized protocols and technologies designed specifically for real-time media streaming, such as WebRTC (Web Real-Time Communication).
+## WebRTC offers several advantages for implementing video and audio call features:
+
+- Low Latency: WebRTC is designed for low-latency communication, making it suitable for real-time applications like video and audio calls.
+
+- High Quality: WebRTC supports high-quality audio and video codecs, ensuring a good user experience during calls.
+
+- Peer-to-Peer Communication: WebRTC allows direct peer-to-peer communication between browsers, reducing the load on servers and improving scalability.
+
+- Security: WebRTC includes built-in security features, such as encryption, to ensure the privacy and security of communication.
+
+- Cross-Platform Support: WebRTC is supported by most modern web browsers and mobile platforms, making it suitable for building cross-platform applications.
+
+
 ## Getting Started
 
 **Working on**
