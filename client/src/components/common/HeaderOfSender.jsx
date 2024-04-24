@@ -14,11 +14,12 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import Chip from "@mui/material/Chip";
-import MyAvatar from '../ui/icons/MyAvatar.jsx';
+import MyAvatar from "../ui/icons/MyAvatar.jsx";
 import ChatOption from "../ui/buttons/ChatOption.jsx";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import VideoCallButton from "../ui/buttons/VideoCallButton.jsx";
 import CallButton from "../ui/buttons/CallButton.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const pages = [];
 
@@ -30,13 +31,26 @@ function HeaderOfSender({
   handleSetToggleIsOpen,
   handleMobileView,
 }) {
-  const settings = [  
-    handleMobileView &&  <div style={{display:'flex'}} ><CallButton handleMobileView={handleMobileView} />
-    <VideoCallButton handleMobileView={handleMobileView} />
-    </div>  
-    
-    
-    ,"Profile", "Account", "Dashboard", "Logout"];
+  const { logout } = useAuth0();
+  const settings = [
+    handleMobileView && (
+      <div style={{ display: "flex" }}>
+        <CallButton handleMobileView={handleMobileView} />
+        <VideoCallButton handleMobileView={handleMobileView} />
+      </div>
+    ),
+
+    "Profile",
+    "Account",
+    "Dashboard",
+    <button
+      onClick={() =>
+        logout({ logoutParams: { returnTo: window.location.origin } })
+      }
+    >
+      Log Out
+    </button>,
+  ];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
@@ -89,7 +103,7 @@ function HeaderOfSender({
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
-              
+
               textDecoration: "none",
             }}
           >
@@ -98,11 +112,10 @@ function HeaderOfSender({
               alt=""
               srcset=""
               style={{ height: "50px" }}
-              />
+            />
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
 
           <Typography
             variant="h5"
@@ -111,35 +124,34 @@ function HeaderOfSender({
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
-              display: { xs: "flex",  md: "none", justifyContent:'center' },
+              display: { xs: "flex", md: "none", justifyContent: "center" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
-              
             }}
-            >
+          >
             <img
               src="./chatterboxLogo.png"
               alt=""
               srcset=""
               style={{ height: "50px" }}
-              />
+            />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
 
-          <Box sx={{ flexGrow: 0, }}>
-            <Tooltip title="Open settings" style={{ display:'flex'}}>
-              <ChatOption/>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings" style={{ display: "flex" }}>
+              <ChatOption />
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <MyAvatar/>
+                <MyAvatar />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "60px" , }}
+              sx={{ mt: "60px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -153,7 +165,7 @@ function HeaderOfSender({
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-              >
+            >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>

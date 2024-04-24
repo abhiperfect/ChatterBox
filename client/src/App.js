@@ -10,14 +10,14 @@ import Login from "./pages/Login.jsx";
 import SignUp from "./pages/Signup.jsx";
 
 
-
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
           
-          <Route path="/" element={<Chat/>}></Route>
+          <Route path="/" element={<Home/>}></Route>
+          <Route path="/chat" element={<Chat/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/signup" element={<SignUp/>}></Route>
         </Routes>

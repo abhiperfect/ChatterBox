@@ -5,10 +5,11 @@ import ColumnsGrid from "../components/common/ColumnsGrid.jsx";
 import Grid from "@mui/material/Unstable_Grid2";
 import Header from "../components/common/Header.jsx";
 import Footer from "../components/common/Footer.jsx";
-import axios from 'axios';
-
+import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Chat() {
+  const { user, isAuthenticated, isLoading } = useAuth0();
   const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
 
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 600); // Assuming mobile view width as 600px
@@ -75,15 +76,14 @@ export default function Chat() {
     },
   ]);
 
-
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/data');
-        console.log("Server send data",response.data);
+        const response = await axios.get("http://localhost:8000/api/data");
+        console.log("Server send data", response.data);
         setData(response.data);
       } catch (error) {
         console.log(error.message);
@@ -104,8 +104,8 @@ export default function Chat() {
     // Additional logic to send message to server or handle messages as needed
   };
   const handleItemClick = (id) => {
-    console.log('Chat got clicked: ', id);
-   
+    console.log("Chat got clicked: ", id);
+
     const message = findById(id); // Search for a message with id 3
     if (message) {
       console.log("Found message:", message);
@@ -130,32 +130,39 @@ export default function Chat() {
   function handleToggle(value) {
     setIsRightContainerOpen(false);
   }
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
 
   return (
-    <div className="mainContainer">
-      <ColumnsGrid>
-        {/* For mobile devices, the LeftContainer will take the full width */}
-        <Grid item xs={12} sm={4}>
-          <LeftContainer onItemClick={handleItemClick} handleMobileView={isMobileView}/>
-        </Grid>
-        {/* For laptops and larger screens, the LeftContainer will take 1/3 of the width */}
-        <Grid
-          item
-          xs={12}
-          sm={8}
-          sx={{ position: isMobileView ? "absolute" : "static" , bottom:'0'}}
-        >
-          <RightContainer
-            isOpen={isRightContainerOpen}
-            handleSetToggleIsOpen={handleToggle}
-            handleMobileView={isMobileView}
-
-            messages={messages}
-            handleSendMessage={handleSendMessage}
-          />
-        </Grid>
-      </ColumnsGrid>
-      <Footer borderBottomRightRadius="20px" borderBottomLeftRadius="20px" />
-    </div>
+    isAuthenticated && (
+      <div className="mainContainer">
+        <ColumnsGrid>
+          {/* For mobile devices, the LeftContainer will take the full width */}
+          <Grid item xs={12} sm={4}>
+            <LeftContainer
+              onItemClick={handleItemClick}
+              handleMobileView={isMobileView}
+            />
+          </Grid>
+          {/* For laptops and larger screens, the LeftContainer will take 1/3 of the width */}
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            sx={{ position: isMobileView ? "absolute" : "static", bottom: "0" }}
+          >
+            <RightContainer
+              isOpen={isRightContainerOpen}
+              handleSetToggleIsOpen={handleToggle}
+              handleMobileView={isMobileView}
+              messages={messages}
+              handleSendMessage={handleSendMessage}
+            />
+          </Grid>
+        </ColumnsGrid>
+        <Footer borderBottomRightRadius="20px" borderBottomLeftRadius="20px" />
+      </div>
+    )
   );
 }
