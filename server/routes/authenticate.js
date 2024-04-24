@@ -8,6 +8,11 @@ app.post('/authenticate', async (req, res) => {
   try {
     const db = connectToDatabase();
     const { user } = req.body;
+
+    // Check if the user email is undefined or null
+    if (!user || !user.email) {
+      return res.status(400).json({ error: "User email is missing" });
+    }
    
     // Check if the user already exists in the database
     const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [user.email]);
