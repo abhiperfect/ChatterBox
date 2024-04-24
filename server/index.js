@@ -1,14 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser'; 
 import cors from 'cors';
-
+import authenticateRoute from './routes/authenticate.js'
 const app = express();
 
 //%%MIDDLEWARE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/api', authenticateRoute);
 //%%MIDDLEWARE END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 app.get('/',( req, res)=>{
    res.send('server is ok');
