@@ -24,13 +24,14 @@ ChatterBox is built using the following technologies:
   - Material-UI: A React component library implementing Google's Material Design.
   - Emoji Picker: Library for adding emoji picker functionality to the application.
   - Axios: HTTP client for making API requests to the backend.
+  - Auth0: Authentication and authorization platform for securing the application.
 
 - **Backend:**
   - Node.js: A JavaScript runtime environment for building server-side applications.
   - Express.js: A web application framework for Node.js, used for building RESTful APIs.
   - PostgreSQL: A powerful, open-source relational database system for storing user data, messages, and other application information.
   - Sequelize: An ORM (Object-Relational Mapping) library for Node.js, used to interact with the PostgreSQL database.
-    
+
 **Working on**
 - **Deployment:**
   - Docker: A containerization platform for packaging applications and their dependencies into containers.
@@ -70,4 +71,3 @@ If you encounter any issues or have any questions about ChatterBox, please don't
 ## License
 
 ChatterBox is licensed under the [MIT License](LICENSE).
-
