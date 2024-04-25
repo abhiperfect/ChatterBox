@@ -7,8 +7,13 @@ const router = express.Router();
 router.get('/:senderId/:recipientId', async (req, res) => {
   const db = connectToDatabase();
   const { senderId, recipientId } = req.params;
-  try {
+  
+  // Check if senderId or recipientId is null or undefined
+  if (!senderId || !recipientId) {
+    return res.status(400).json({ error: 'Sender ID and recipient ID are required' });
+  }
 
+  try {
     const messages = await db.query('SELECT * FROM messages WHERE (senderid = $1 AND receiverid= $2) OR (senderid = $2 AND receiverid= $1)', [senderId, recipientId]);
 
     res.json(messages.rows);
