@@ -12,6 +12,7 @@ root.render(
     authorizationParams={{
       redirect_uri: window.location.origin
     }}
+    cacheLocation={'localstorage'}         //To store cookies locally, Refresh the page persist the user data
   >
     <App />
   </Auth0Provider>,
