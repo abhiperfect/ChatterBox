@@ -10,6 +10,23 @@ export const useUserContext = () => useContext(UserContext);
 export const UserProvider = ({ children }) => {
   const { isAuthenticated ,user} = useAuth0(); // Get isAuthenticated from useAuth0
   const [userData, setUserData] = useState({ userId: null, connectedUsers: [] });
+  const [selectedUserId, setSelectedUserId] = useState(null); // State for selected user ID
+  const [messages, setMessages] = useState([]);
+
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/messages/${userData.userId}/${selectedUserId}`);
+        setMessages(response.data);
+        console.log("I got messges:", response.data);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchMessages();
+  }, [userData.userId, selectedUserId]);
 
   useEffect(() => {
     if (isAuthenticated !== undefined) { // Check if isAuthenticated is defined
@@ -33,7 +50,7 @@ export const UserProvider = ({ children }) => {
   }, [isAuthenticated]); // Add isAuthenticated to the dependency array
 
   return (
-    <UserContext.Provider value={{ userData }}>
+    <UserContext.Provider value={{userData, selectedUserId, setSelectedUserId ,messages, setMessages}}>
       {children}
     </UserContext.Provider>
   );

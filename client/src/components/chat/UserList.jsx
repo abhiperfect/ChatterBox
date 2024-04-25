@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useUserContext } from "../../context/UserContext.js";
 
 export default function UserList({ onItemClick }) {
-  const { userData } = useUserContext();
+  const { userData, setSelectedUserId } = useUserContext();
   const { userId, connectedUsers } = userData;
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -16,6 +16,7 @@ export default function UserList({ onItemClick }) {
     if (typeof onItemClick === "function") {
       onItemClick(id);
       setSelectedItem(id);
+      setSelectedUserId(id);
     }
   };
 

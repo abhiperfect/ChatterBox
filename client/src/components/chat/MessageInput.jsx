@@ -4,12 +4,14 @@ import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import AddIcon from "@mui/icons-material/Add";
 import MyEmojiPicker from "./MyEmojipicker.jsx";
+import { useUserContext } from "../../context/UserContext.js";
 
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
 
 
 export default function MessageInput({ onSendMessage }) {
+  const { messages,userData, selectedUserId,setSelectedUserId,setMessages } = useUserContext();  
   const [inputValue, setInputValue] = useState("");
   const [sendButtonActive, setSendButtonActive] = useState(false);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -64,12 +66,14 @@ export default function MessageInput({ onSendMessage }) {
         minute: "2-digit",
       });
       const newMessage = {
-        id: null,
-        sender_id: "user1",
-        message_text: inputValue,
-        sent_at: currentTime,
+        messageid: null,
+        senderid: userData.userId,
+        receiverid:selectedUserId,
+        content: inputValue,
+        timestamp: currentTime,
       };
-      onSendMessage(newMessage);
+      setMessages([...messages, newMessage]);
+      // onSendMessage(newMessage);
       setInputValue("");
       setSendButtonActive(false);
     }
