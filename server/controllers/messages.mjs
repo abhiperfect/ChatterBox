@@ -7,9 +7,9 @@ const router = express.Router();
 router.get('/:senderId/:recipientId', async (req, res) => {
   const db = connectToDatabase();
   const { senderId, recipientId } = req.params;
-  
+
   // Check if senderId or recipientId is null or undefined
-  if (!senderId || !recipientId) {
+  if (!recipientId === false) {
     return res.status(400).json({ error: 'Sender ID and recipient ID are required' });
   }
 
