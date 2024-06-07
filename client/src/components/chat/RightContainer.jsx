@@ -4,14 +4,16 @@ import HeaderOfSender from "../common/HeaderOfSender.jsx";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import { backgroundColor } from "../../constants/color.jsx";
-export default function RightContainer({ isOpen, handleSetToggleIsOpen, handleMobileView, handleSendMessage}) {
-  const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
+import { useComponentContext } from "../../context/UserContext.js";
+
+export default function RightContainer({ handleMobileView, handleSendMessage}) {
+  const {isRightContainerOpen, setIsRightContainerOpen} = useComponentContext();
   const handleToggle = () => {
-    setIsRightContainerOpen(true);
+    setIsRightContainerOpen(!isRightContainerOpen);
   };
 
   return (
-    <div style={{ display: true ? "block" : "none" }}>
+    <div style={{ display: isRightContainerOpen ? "block" : "none" }}>
       <HeaderOfSender borderTopRightRadius="20px" handleSetToggleIsOpen={handleToggle} handleMobileView={handleMobileView} 
       />
       <SimpleContainer backgroundColor={backgroundColor} height="73vh">

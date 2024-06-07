@@ -30,6 +30,16 @@ export const scrollerBGColor = '#f1f1f1';
 export const buttonColor = "#EF233C";
 export const statusOnlineColor = '#4CCD99';
 export const statusOfflineColor = "#e50721";
+export const myMessageContainer = " #EF233C";
+export const friendMessageContainer = "#FFFFFF";
+
+
+
+
+
+
+
+
 
 export const blue = "#334ed5";
 export const blueLight = "rgba(12, 69, 155, 0.2)";

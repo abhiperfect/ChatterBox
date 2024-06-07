@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const UserContext = createContext();
 const SenderContext = createContext();
+const ComponentContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const { isAuthenticated, user } = useAuth0();
@@ -27,8 +28,9 @@ export const UserProvider = ({ children }) => {
     userid: 1,
     username: "Alice",
     profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
-    isOnline:true,
+    isOnline: true,
   });
+  const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -79,14 +81,18 @@ export const UserProvider = ({ children }) => {
         setSelectedUserId,
         messages,
         setMessages,
-        userDetails, 
+        userDetails,
         setUserDetails,
       }}
     >
       <SenderContext.Provider
         value={{ selectUserDetails, setSelectedUserDetails }}
       >
-        {children}
+        <ComponentContext.Provider
+          value={{ isRightContainerOpen, setIsRightContainerOpen }}
+        >
+          {children}
+        </ComponentContext.Provider>
       </SenderContext.Provider>
     </UserContext.Provider>
   );
@@ -94,3 +100,4 @@ export const UserProvider = ({ children }) => {
 
 export const useUserContext = () => useContext(UserContext);
 export const useSenderContext = () => useContext(SenderContext);
+export const useComponentContext = () => useContext(ComponentContext);

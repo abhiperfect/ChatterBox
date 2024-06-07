@@ -67,10 +67,10 @@ export const sampleNotifications = [
 export const sampleMessage = [
   {
     attachments: [],
-    content: "L*uda ka Message hai",
+    content: "Piyush ka Message hai",
     _id: "sfnsdjkfsdnfkjsbnd",
     sender: {
-      _id: "user._id",
+      _id: "2",
       name: "Chaman ",
     },
     chat: "chatId",
@@ -87,7 +87,91 @@ export const sampleMessage = [
     content: "",
     _id: "1",
     sender: {
-      _id: "sdfsdfsdf",
+      _id: "1",
+      name: "Chaman  2",
+    },
+    chat: "chatId",
+    createdAt: "2024-02-12T10:41:30.630Z",
+  },
+  {
+    attachments: [],
+    content: "Raman ka Message hai",
+    _id: "sfnsdjkfsdnfkjsbnd",
+    sender: {
+      _id: "1",
+      name: "Chaman ",
+    },
+    chat: "chatId",
+    createdAt: "2024-02-12T10:41:30.630Z",
+  },
+
+  {
+    attachments: [
+      {
+        public_id: "asdsad 2",
+        url: "https://www.w3schools.com/howto/img_avatar.png",
+      },
+    ],
+    content: "",
+    _id: "1",
+    sender: {
+      _id: "2",
+      name: "Chaman  2",
+    },
+    chat: "chatId",
+    createdAt: "2024-02-12T10:41:30.630Z",
+  },
+  {
+    attachments: [],
+    content: "Charan ka Message hai",
+    _id: "sfnsdjkfsdnfkjsbnd",
+    sender: {
+      _id: "2",
+      name: "Chaman ",
+    },
+    chat: "chatId",
+    createdAt: "2024-02-12T10:41:30.630Z",
+  },
+
+  {
+    attachments: [
+      {
+        public_id: "asdsad 2",
+        url: "https://www.w3schools.com/howto/img_avatar.png",
+      },
+    ],
+    content: "",
+    _id: "1",
+    sender: {
+      _id: "1",
+      name: "Chaman  2",
+    },
+    chat: "chatId",
+    createdAt: "2024-02-12T10:41:30.630Z",
+  },
+  {
+    attachments: [],
+    content: "Aman ka Message hai",
+    _id: "sfnsdjkfsdnfkjsbnd",
+    sender: {
+      _id: "1",
+      name: "Chaman ",
+    },
+    chat: "chatId",
+    createdAt: "2024-02-12T10:41:30.630Z",
+  },
+
+  {
+    attachments: [
+      {
+        public_id: "asdsad 2",
+        url: "https://www.w3schools.com/howto/img_avatar.png",
+      },
+    ],
+    content: "",
+    _id: "1",
+    sender: {
+      _id: "2",
       name: "Chaman  2",
     },
     chat: "chatId",

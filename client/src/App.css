@@ -17,11 +17,14 @@
 
 .chat-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: calc(100% - 60px);
   padding: 50px;
   padding-bottom: 0px;
   overflow-y: auto;
+  padding-bottom: 10px;
 }
 
 .chat-container::-webkit-scrollbar {

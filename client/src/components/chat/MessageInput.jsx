@@ -4,14 +4,10 @@ import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import AddIcon from "@mui/icons-material/Add";
 import MyEmojiPicker from "./MyEmojipicker.jsx";
-import { useUserContext } from "../../context/UserContext.js";
-import io from "socket.io-client"; // Import socket.io-client
-
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
 
 export default function MessageInput() {
-  const { userData, selectedUserId, setMessages } = useUserContext();
   const [inputValue, setInputValue] = useState("");
   const [sendButtonActive, setSendButtonActive] = useState(false);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -21,89 +17,14 @@ export default function MessageInput() {
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
 
-  const socket = useRef(null); // Ref for socket
-
-  const sendSound = new Audio(sendSoundPath);
-
-  useEffect(() => {
-    // Connect to the websocket server when the component mounts
-    socket.current = io("YOUR_WEBSOCKET_SERVER_URL");
-
-    // Cleanup function to disconnect socket when the component unmounts
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(event.target) &&
-        !inputRef.current.contains(event.target)
-      ) {
-        setIsEmojiPickerOpen(false);
-      }
-    }
-
-    function handleBackspace(event) {
-      if (event.key === "Backspace" && inputValue === "") {
-        const newEmojis = [...chosenEmojis];
-        newEmojis.pop(); // Remove the last emoji
-        setChosenEmojis(newEmojis);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleBackspace);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleBackspace);
-    };
-  }, [chosenEmojis, inputValue]);
-
   const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-    setSendButtonActive(event.target.value.trim() !== "");
+
   };
 
   const handleSendMessage = () => {
-    if (inputValue.trim() !== "" && selectedUserId) {
-      sendSound.play();
-      const currentTime = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      const newMessage = {
-        senderId: userData.userId, // Include sender's ID
-        receiverId: selectedUserId, // Include receiver's ID
-        content: inputValue,
-        timestamp: currentTime,
-      };
-
-      // Send the message via websocket
-      socket.current.emit("chat message", newMessage);
-
-      // Add the message to the local state
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      setInputValue("");
-      setSendButtonActive(false);
-    }
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSendMessage();
-    }
-    if (event.key === "Backspace") {
-      const newEmojis = [...chosenEmojis];
-      newEmojis.pop(); // Remove the last emoji
-      setChosenEmojis(newEmojis);
-    }
   };
 
   const toggleEmojiPicker = () => {

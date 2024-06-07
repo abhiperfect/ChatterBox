@@ -9,15 +9,15 @@ import { useUserContext } from "../../context/UserContext.js";
 import { userListTextColor, userListBGColor, userListOnSelectBoxShadow } from "../../constants/color.jsx";
 import { sampleUsers } from "../../constants/sampleData.js";
 import { useSenderContext } from "../../context/UserContext.js";
+import { useComponentContext } from "../../context/UserContext.js";
+
 
 export default function UserList() {
   const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
+  const {isRightContainerOpen, setIsRightContainerOpen} = useComponentContext();
 
   const userId = 1;
-  const [selectedItem, setSelectedItem] = useState(null);
-
   const handleClick = (user) => {
-      setSelectedItem(user.userid);
       setSelectedUserDetails(
         {
           userid: user.userid,
@@ -26,6 +26,7 @@ export default function UserList() {
           isOnline: user.isOnline
         }
       );
+      setIsRightContainerOpen(true);
   };
 
   return (
@@ -39,7 +40,7 @@ export default function UserList() {
               onClick={() => handleClick(user)} // Pass user.userid to handleClick
               sx={{
                 boxShadow:
-                  selectedItem === user.userid
+                selectUserDetails.userid === user.userid
                     ? `0 0 10px ${userListOnSelectBoxShadow}`
                     : "none",
                 transition: "box-shadow 0.3s ease",
