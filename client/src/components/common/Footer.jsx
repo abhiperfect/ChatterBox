@@ -1,23 +1,35 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import SettingButton from "../ui/buttons/SettingButton";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  MenuItem,
+} from "@mui/material";
+import { Menu as MenuIcon, Adb as AdbIcon } from "@mui/icons-material"; // Single line import for icons
 import MyAvatar from "../ui/icons/MyAvatar.jsx";
+import {
+  footerBGColor,
+  footerButtonTextColor,
+} from "../../constants/color.jsx";
+import { useUserContext } from "../../context/UserContext.js";
+import NotificationsIcon from "../ui/icons/Notifications.jsx";
+import CallsIcon from "../ui/icons/Calls.jsx";
+import StatusIcon from "../ui/icons/Status.jsx";
+import SettingIcon from "../ui/icons/Setting.jsx";
 
-
-
-const pages = ["Calls", "Status", "Setting"];
+const pages = [
+  <NotificationsIcon />,
+  <CallsIcon />,
+  <StatusIcon />,
+  <SettingIcon />,
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Footer({
@@ -29,6 +41,8 @@ function Footer({
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const { userDetails } = useUserContext();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -54,7 +68,7 @@ function Footer({
         borderBottomLeftRadius: borderBottomLeftRadius,
         borderBottomRightRadius: borderBottomRightRadius,
         padding: "5px",
-        backgroundColor: "#EF233C",
+        backgroundColor: footerBGColor,
       }}
     >
       <Container maxWidth="xl">
@@ -85,11 +99,10 @@ function Footer({
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" ,},
-                ml: "-5px", mt:'-85px',
-              }
-            }
-              
+                display: { xs: "block", md: "none" },
+                ml: "-5px",
+                mt: "-85px",
+              }}
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
@@ -104,7 +117,7 @@ function Footer({
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: footerButtonTextColor, display: "block" }}
               >
                 {page}
               </Button>
@@ -114,11 +127,14 @@ function Footer({
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <MyAvatar backgroundColor={'white'} />
+                <MyAvatar
+                  backgroundColor={footerButtonTextColor}
+                  userDetails={userDetails}
+                />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ ml: "-5px", mt:'-10px' }}
+              sx={{ ml: "-5px", mt: "-10px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

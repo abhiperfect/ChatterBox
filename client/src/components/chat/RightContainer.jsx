@@ -3,16 +3,18 @@ import SimpleContainer from "../common/SimpleContainer";
 import HeaderOfSender from "../common/HeaderOfSender.jsx";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
-
-export default function RightContainer({ isOpen, handleSetToggleIsOpen, handleMobileView, handleSendMessage }) {
+import { backgroundColor } from "../../constants/color.jsx";
+export default function RightContainer({ isOpen, handleSetToggleIsOpen, handleMobileView, handleSendMessage}) {
+  const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
   const handleToggle = () => {
-    handleSetToggleIsOpen();
+    setIsRightContainerOpen(true);
   };
 
   return (
-    <div style={{ display: isOpen ? "block" : "none" }}>
-      <HeaderOfSender borderTopRightRadius="20px" handleSetToggleIsOpen={handleToggle} handleMobileView={handleMobileView} />
-      <SimpleContainer backgroundColor="#DFE5EA" height="73vh">
+    <div style={{ display: true ? "block" : "none" }}>
+      <HeaderOfSender borderTopRightRadius="20px" handleSetToggleIsOpen={handleToggle} handleMobileView={handleMobileView} 
+      />
+      <SimpleContainer backgroundColor={backgroundColor} height="73vh">
         <MessageList />
         <MessageInput onSendMessage={handleSendMessage} />
       </SimpleContainer>

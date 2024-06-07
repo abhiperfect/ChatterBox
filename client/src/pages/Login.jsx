@@ -1,129 +1,277 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useState } from "react";
+import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import {
+  Avatar,
+  Button,
+  Container,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import toast from "react-hot-toast";
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const Login = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const toggleLogin = () => setIsLogin((prev) => !prev);
+  const [userData, setUserData] = useState({
+    name: '',
+    bio: '',
+    username: '',
+    password: '',
+    avatar: null
+  });
+  const [avatarError, setAvatarError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-// TODO remove, this demo shouldn't need to reset the theme.
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-const defaultTheme = createTheme();
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUserData((prevData) => ({
+        ...prevData,
+        avatar: file,
+      }));
+      setAvatarError('');
+    } else {
+      setAvatarError('Please select a valid image file.');
+    }
+  };
 
-export default function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Implement login logic here
+    setIsLoading(false);
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Implement sign up logic here
+    setIsLoading(false);
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+    <div>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          elevation={3}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            padding: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+        >
+          {isLogin ? (
+            <>
+              <Typography variant="h5">Login</Typography>
+              <form
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
+                onSubmit={handleLogin}
               >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-    </ThemeProvider>
+                <TextField
+                  required
+                  fullWidth
+                  label="Username"
+                  margin="normal"
+                  variant="outlined"
+                  name="username"
+                  value={userData.username}
+                  onChange={handleInputChange}
+                />
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleInputChange}
+                />
+
+                <Button
+                  sx={{
+                    marginTop: "1rem",
+                  }}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                  disabled={isLoading}
+                >
+                  Login
+                </Button>
+
+                <Typography textAlign="center" m="1rem">
+                  OR
+                </Typography>
+
+                <Button
+                  fullWidth
+                  variant="text"
+                  onClick={toggleLogin}
+                  disabled={isLoading}
+                >
+                  Sign Up Instead
+                </Button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Typography variant="h5">Sign Up</Typography>
+              <form
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
+                onSubmit={handleSignUp}
+              >
+                <Stack position="relative" width="10rem" margin="auto">
+                  <Avatar
+                    sx={{
+                      width: "10rem",
+                      height: "10rem",
+                      objectFit: "contain",
+                    }}
+                    src={userData.avatar ? URL.createObjectURL(userData.avatar) : ""}
+                  />
+
+                  <IconButton
+                    sx={{
+                      position: "absolute",
+                      bottom: "0",
+                      right: "0",
+                      color: "white",
+                      bgcolor: "rgba(0,0,0,0.5)",
+                      ":hover": {
+                        bgcolor: "rgba(0,0,0,0.7)",
+                      },
+                    }}
+                    component="label"
+                  >
+                    <CameraAltIcon />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={handleAvatarChange}
+                    />
+                  </IconButton>
+                </Stack>
+
+                {avatarError && (
+                  <Typography
+                    m="1rem auto"
+                    width="fit-content"
+                    display="block"
+                    color="error"
+                    variant="caption"
+                  >
+                    {avatarError}
+                  </Typography>
+                )}
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Name"
+                  margin="normal"
+                  variant="outlined"
+                  name="name"
+                  value={userData.name}
+                  onChange={handleInputChange}
+                />
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Bio"
+                  margin="normal"
+                  variant="outlined"
+                  name="bio"
+                  value={userData.bio}
+                  onChange={handleInputChange}
+                />
+                <TextField
+                  required
+                  fullWidth
+                  label="Username"
+                  margin="normal"
+                  variant="outlined"
+                  name="username"
+                  value={userData.username}
+                  onChange={handleInputChange}
+                />
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleInputChange}
+                />
+
+                <Button
+                  sx={{
+                    marginTop: "1rem",
+                  }}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                  disabled={isLoading}
+                >
+                  Sign Up
+                </Button>
+
+                <Typography textAlign="center" m="1rem">
+                  OR
+                </Typography>
+
+                <Button
+                  disabled={isLoading}
+                  fullWidth
+                  variant="text"
+                  onClick={toggleLogin}
+                >
+                  Login Instead
+                </Button>
+              </form>
+            </>
+          )}
+        </Paper>
+      </Container>
+    </div>
   );
-}
+};
+
+export default Login;

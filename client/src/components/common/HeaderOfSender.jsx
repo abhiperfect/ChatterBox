@@ -19,7 +19,7 @@ import ChatOption from "../ui/buttons/ChatOption.jsx";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import VideoCallButton from "../ui/buttons/VideoCallButton.jsx";
 import CallButton from "../ui/buttons/CallButton.jsx";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useSenderContext } from "../../context/UserContext.js";
 
 const pages = [];
 
@@ -31,7 +31,6 @@ function HeaderOfSender({
   handleSetToggleIsOpen,
   handleMobileView,
 }) {
-  const { logout } = useAuth0();
   const settings = [
     handleMobileView && (
       <div style={{ display: "flex" }}>
@@ -43,13 +42,7 @@ function HeaderOfSender({
     "Profile",
     "Account",
     "Dashboard",
-    <button
-      onClick={() =>
-        logout({ logoutParams: { returnTo: window.location.origin } })
-      }
-    >
-      Log Out
-    </button>,
+    <button onClick={() => {}}>Log Out</button>,
   ];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -70,6 +63,7 @@ function HeaderOfSender({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const { selectUserDetails } = useSenderContext();
 
   return (
     <AppBar
@@ -147,7 +141,7 @@ function HeaderOfSender({
             <Tooltip title="Open settings" style={{ display: "flex" }}>
               <ChatOption />
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <MyAvatar />
+                <MyAvatar  userDetails={selectUserDetails} />
               </IconButton>
             </Tooltip>
             <Menu

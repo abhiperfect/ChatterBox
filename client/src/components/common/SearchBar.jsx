@@ -15,6 +15,8 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import { searchBarBGColor, searchBarTextColor, searchBarInsetBoxShadow } from "../../constants/color";
+
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -94,8 +96,8 @@ function SearchBar({
         borderTopRightRadius: borderTopRightRadius,
         borderBottomLeftRadius: borderBottomLeftRadius,
         borderBottomRightRadius: borderBottomRightRadius,
-        backgroundColor:'#EDF2F4',
-        color:'GrayText',
+        backgroundColor:searchBarBGColor,
+        color:searchBarTextColor ,
         height:'70px',
         display:'flex',
         justifyContent:'center',
@@ -105,7 +107,7 @@ function SearchBar({
       
     >
       <Container maxWidth="xl">
-        <Search sx={{ boxShadow:'inset grey 0px 0px 15px -10px'
+        <Search sx={{ boxShadow:`inset ${searchBarInsetBoxShadow} 0px 0px 15px -10px`
         }}>
           <SearchIconWrapper>
             <SearchIcon />

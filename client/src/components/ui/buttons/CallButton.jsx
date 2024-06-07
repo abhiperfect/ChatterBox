@@ -15,11 +15,11 @@ import AdbIcon from "@mui/icons-material/Adb";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-
+import { buttonColor } from "../../../constants/color";
 export default function CallButton({handleMobileView}) {
   return (
     <IconButton
-      sx={{ my: handleMobileView ? 0 : 2, color: "#EF233C", display: "block" }}
+      sx={{ my: handleMobileView ? 0 : 2, color: buttonColor, display: "block" }}
       aria-label="delete"
     >
       <CallRoundedIcon />

@@ -1,10 +1,15 @@
-import * as React from "react";
+import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
 import Chip from "@mui/material/Chip";
+import { statusOnlineColor, statusOfflineColor } from "../../../constants/color";
 
-export default function MyAvatar({ backgroundColor }) {
+export default function MyAvatar({ backgroundColor, userDetails }) {
+  // Handle case where userDetails might be undefined
+  const username = userDetails?.username || "Unknown User";
+  const profilePicture = userDetails?.profilepicture || "/static/images/default-avatar.png";
+  const isOnline = userDetails?.isOnline || false;
+
   return (
     <Chip
       sx={{
@@ -12,33 +17,47 @@ export default function MyAvatar({ backgroundColor }) {
         height: "50px",
         fontSize: "1.2rem",
         borderRadius: "30px",
-        backgroundColor: { backgroundColor },
-      }} // Adjust width, height, and font size as needed
+        backgroundColor: backgroundColor,
+      }}
       avatar={
         <Avatar
-          alt="Dremy Sharp"
-          src="/static/images/avatar/2.jpg"
-          sx={{ width: "100px", height: "100px" }} // Increase width and height
-          style={{ height: "40px", width: "40px" }}
+          alt={username}
+          src={profilePicture}
+          sx={{ width: "40px", height: "40px" }}
         />
       }
       label={
-        <React.Fragment>
+        <Fragment>
           <Typography
             variant="body1"
             sx={{ fontWeight: "bold", fontSize: "18px" }}
           >
-            Avatar
-          </Typography>{" "}
-          {/* New term */}
-          <Typography
-            variant="body2"
-            sx={{ fontSize: "12px", color: '#4CCD99', animation: "blinking 2s infinite" }} // Apply animation
-          >
-            online
+            {username}
           </Typography>
-          {/* Existing label */}
-        </React.Fragment>
+          {isOnline ? (
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "12px",
+                color: statusOnlineColor,
+                animation: "blinking 2s infinite",
+              }}
+            >
+              online
+            </Typography>
+          ) : (
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "12px",
+                color: statusOfflineColor,
+                animation: "blinking 3s infinite",
+              }}
+            >
+              offline
+            </Typography>
+          )}
+        </Fragment>
       }
     />
   );

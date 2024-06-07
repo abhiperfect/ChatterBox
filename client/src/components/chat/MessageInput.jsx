@@ -5,13 +5,13 @@ import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import AddIcon from "@mui/icons-material/Add";
 import MyEmojiPicker from "./MyEmojipicker.jsx";
 import { useUserContext } from "../../context/UserContext.js";
+import io from "socket.io-client"; // Import socket.io-client
 
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
 
-
-export default function MessageInput({ onSendMessage }) {
-  const { messages,userData, selectedUserId,setSelectedUserId,setMessages } = useUserContext();  
+export default function MessageInput() {
+  const { userData, selectedUserId, setMessages } = useUserContext();
   const [inputValue, setInputValue] = useState("");
   const [sendButtonActive, setSendButtonActive] = useState(false);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -21,9 +21,21 @@ export default function MessageInput({ onSendMessage }) {
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
 
-  const sendSound = new Audio(sendSoundPath);
-  const receiveSound = new Audio(receiveSoundPath);
+  const socket = useRef(null); // Ref for socket
 
+  const sendSound = new Audio(sendSoundPath);
+
+  useEffect(() => {
+    // Connect to the websocket server when the component mounts
+    socket.current = io("YOUR_WEBSOCKET_SERVER_URL");
+
+    // Cleanup function to disconnect socket when the component unmounts
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -59,21 +71,25 @@ export default function MessageInput({ onSendMessage }) {
   };
 
   const handleSendMessage = () => {
-    if (inputValue.trim() !== "") {
+    if (inputValue.trim() !== "" && selectedUserId) {
       sendSound.play();
       const currentTime = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
       const newMessage = {
-        messageid: null,
-        senderid: userData.userId,
-        receiverid:selectedUserId,
+        senderId: userData.userId, // Include sender's ID
+        receiverId: selectedUserId, // Include receiver's ID
         content: inputValue,
         timestamp: currentTime,
       };
-      setMessages([...messages, newMessage]);
-      // onSendMessage(newMessage);
+
+      // Send the message via websocket
+      socket.current.emit("chat message", newMessage);
+
+      // Add the message to the local state
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
       setInputValue("");
       setSendButtonActive(false);
     }
@@ -99,7 +115,6 @@ export default function MessageInput({ onSendMessage }) {
     setInputFocus(true);
   };
 
-  
   return (
     <div className="chatbox-input">
       <AddIcon />

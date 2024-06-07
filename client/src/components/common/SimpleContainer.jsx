@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React, {Fragment} from 'react';
 import Box from '@mui/material/Box';
+import { thumbColor, scrollerBGColor } from '../../constants/color';
 
 export default function SimpleContainer({ children, backgroundColor, height ,cursor}) {
   return (
-    <React.Fragment>
+    <Fragment>
       <Box sx={{ paddingLeft: 0, paddingRight: 0 }}>
         <div>
           <Box sx={{
@@ -15,17 +16,17 @@ export default function SimpleContainer({ children, backgroundColor, height ,cur
               width: '8px', // Width of the scrollbar
             },
             '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#8D99AE', // Color of the thumb
+              backgroundColor:thumbColor, // Color of the thumb
               borderRadius: '4px', // Border radius of the thumb
             },
             '&::-webkit-scrollbar-track': {
-              backgroundColor: '#f1f1f1', // Color of the track
+              backgroundColor: scrollerBGColor , // Color of the track
             },
           }}>
             {children}
           </Box>
         </div>
       </Box>
-    </React.Fragment>
+    </Fragment>
   );
 }

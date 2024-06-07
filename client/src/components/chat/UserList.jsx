@@ -6,33 +6,41 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import { useUserContext } from "../../context/UserContext.js";
+import { userListTextColor, userListBGColor, userListOnSelectBoxShadow } from "../../constants/color.jsx";
+import { sampleUsers } from "../../constants/sampleData.js";
+import { useSenderContext } from "../../context/UserContext.js";
 
-export default function UserList({ onItemClick }) {
-  const { userData, setSelectedUserId } = useUserContext();
-  const { userId, connectedUsers } = userData;
+export default function UserList() {
+  const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
+
+  const userId = 1;
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const handleClick = (id) => {
-    if (typeof onItemClick === "function") {
-      onItemClick(id);
-      setSelectedItem(id);
-      setSelectedUserId(id);
-    }
+  const handleClick = (user) => {
+      setSelectedItem(user.userid);
+      setSelectedUserDetails(
+        {
+          userid: user.userid,
+          username: user.username,
+          profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
+          isOnline: user.isOnline
+        }
+      );
   };
 
   return (
-    <List sx={{ width: "100%", bgcolor: "#EDF2F4", color: "#0E0D0E" }}>
-      {connectedUsers.map((user) => {
+    <List sx={{ width: "100%", bgcolor: userListBGColor , color: userListTextColor }}>
+      {sampleUsers.map((user) => {
         if (user.userid !== userId) {
           return (
             <ListItem
               key={user.userid} // Use a unique key for each list item
               alignItems="flex-start"
-              onClick={() => handleClick(user.userid)} // Pass user.userid to handleClick
+              onClick={() => handleClick(user)} // Pass user.userid to handleClick
               sx={{
                 boxShadow:
                   selectedItem === user.userid
-                    ? "0 0 10px rgba(0, 0, 0, 0.2)"
+                    ? `0 0 10px ${userListOnSelectBoxShadow}`
                     : "none",
                 transition: "box-shadow 0.3s ease",
               }}
@@ -47,11 +55,11 @@ export default function UserList({ onItemClick }) {
               <div className="chat-details">
                 <div className="text-head">
                   <h4>{user.username}</h4>
-                  <p className="time unread">2.55</p>
+                  <p className="time unread">{user.lastMessageTime}</p>
                 </div>
                 <div className="text-message">
-                  <p>How about you? How's everything going on your end?</p>
-                  {1 > 0 && <b>1</b>}
+                  <p>{user.lastMessage}</p>
+                  {user.unreadMessages > 0 && <b>{user.unreadMessages}</b>}
                 </div>
               </div>
             </ListItem>
