@@ -2,14 +2,18 @@ import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import { statusOnlineColor, statusOfflineColor } from "../../../constants/color";
+import {
+  statusOnlineColor,
+  statusOfflineColor,
+} from "../../../constants/color";
 
 export default function MyAvatar({ backgroundColor, userDetails }) {
   // Handle case where userDetails might be undefined
   const username = userDetails?.username || "Unknown User";
-  const profilePicture = userDetails?.profilepicture || "/static/images/default-avatar.png";
+  const profilePicture =
+    userDetails?.profilepicture || "/static/images/default-avatar.png";
   const isOnline = userDetails?.isOnline || false;
-
+  const isGroup = userDetails?.groupChat || false;
   return (
     <Chip
       sx={{
@@ -34,7 +38,17 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
           >
             {username}
           </Typography>
-          {isOnline ? (
+          {isGroup ? (
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "10px",
+                color: "tomato",
+              }}
+            >
+              Group Chat
+            </Typography>
+          ) : isOnline ? (
             <Typography
               variant="body2"
               sx={{
@@ -43,7 +57,7 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
                 animation: "blinking 2s infinite",
               }}
             >
-              online
+              Online
             </Typography>
           ) : (
             <Typography
@@ -54,7 +68,7 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
                 animation: "blinking 3s infinite",
               }}
             >
-              offline
+              Offline
             </Typography>
           )}
         </Fragment>

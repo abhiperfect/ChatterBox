@@ -9,16 +9,6 @@ const MessageContext = createContext();
 const NotificationsContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const { isAuthenticated, user } = useAuth0();
-
-  //May be repalced or remove
-  const [userData, setUserData] = useState({
-    userId: null,
-    connectedUsers: [],
-  });
-  const [selectedUserId, setSelectedUserId] = useState(null);
-
-  //new way to creating
   const [selectUserDetails, setSelectedUserDetails] = useState({
     userId: 1000,
     username: "NO-User",
@@ -31,7 +21,49 @@ export const UserProvider = ({ children }) => {
     username: "Alice",
     profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
     isOnline: true,
+    groupChat:false,
   });
+  
+  const [userConnections, setUserConnections ] = useState(
+    [
+      {
+        _id: "1",
+        name: "John Doe",
+        avatar: "https://www.w3schools.com/howto/img_avatar.png",
+        groupChat: false,
+        members: ["1", "2"],
+        lastMessage: "Did you complete the project?",
+        lastMessageTime: "1:20 PM",
+        unreadMessages: 0,
+        isOnline:false,
+      },
+    
+      {
+        _id: "2",
+        name: "John Boi",
+        avatar: "https://www.w3schools.com/howto/img_avatar.png",
+        groupChat: true,
+        members: ["1", "2"],
+        lastMessage: "How about you? How's everything going on your end?",
+        lastMessageTime: "2:55 PM",
+        unreadMessages: 1,
+        isOnline:true,
+      },
+      {
+        _id: "3",
+        name: "Alice",
+        avatar: "https://www.w3schools.com/howto/img_avatar.png",
+        groupChat: false,
+        members: ["1", "2"],
+        lastMessage: "Did you complete the project?",
+        lastMessageTime: "1:20 PM",
+        unreadMessages: 0,
+        isOnline:true,
+      },
+    ]
+  );
+  
+
   const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
 
   const [messages, setMessages] = useState([
@@ -166,49 +198,8 @@ export const UserProvider = ({ children }) => {
     },
   ]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      if (userData.userId && selectedUserId) {
-        try {
-          const response = await axios.get(
-            `http://localhost:8000/api/messages/${userData.userId}/${selectedUserId}`
-          );
-          setMessages(response.data);
-          console.log("I got messages:", response.data);
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-        }
-      }
-    };
-
-    fetchMessages();
-  }, [userData.userId, selectedUserId]);
-
-  useEffect(() => {
-    if (isAuthenticated !== undefined && user) {
-      const fetchUserData = async () => {
-        try {
-          console.log("Context:", user);
-          const response = await axios.post(
-            "http://localhost:8000/api/authenticate",
-            { user }
-          );
-          if (response.status === 200 && isAuthenticated) {
-            const { userId, connectedUsers } = response.data;
-            setUserData({ userId, connectedUsers });
-          } else {
-            console.error("Failed to get user data:", response.status);
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      };
-      fetchUserData();
-    }
-  }, [isAuthenticated, user]);
-
   return (
-    <UserContext.Provider value={{ userDetails, setUserDetails }}>
+    <UserContext.Provider value={{ userDetails, setUserDetails,userConnections, setUserConnections }}>
       <SenderContext.Provider
         value={{ selectUserDetails, setSelectedUserDetails }}
       >

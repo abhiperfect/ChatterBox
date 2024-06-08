@@ -1,29 +1,27 @@
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import { useState } from "react";
-import { useUserContext } from "../../context/UserContext.js";
 import { userListTextColor, userListBGColor, userListOnSelectBoxShadow } from "../../constants/color.jsx";
 import { sampleUsers } from "../../constants/sampleData.js";
 import { useSenderContext } from "../../context/UserContext.js";
 import { useComponentContext } from "../../context/UserContext.js";
-
+import { useUserContext } from "../../context/UserContext.js";
 
 export default function UserList() {
   const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
   const {isRightContainerOpen, setIsRightContainerOpen} = useComponentContext();
-
-  const userId = 1;
+  const {userConnections, setUserConnections} = useUserContext();
+   const userId = 1;
   const handleClick = (user) => {
       setSelectedUserDetails(
         {
-          userid: user.userid,
-          username: user.username,
+          userid: user._id,
+          username: user.name,
           profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
-          isOnline: user.isOnline
+          isOnline: user.isOnline,
+          groupChat:user.groupChat,
         }
       );
       setIsRightContainerOpen(true);
@@ -31,16 +29,16 @@ export default function UserList() {
 
   return (
     <List sx={{ width: "100%", bgcolor: userListBGColor , color: userListTextColor }}>
-      {sampleUsers.map((user) => {
-        if (user.userid !== userId) {
+      {userConnections.map((user) => {
+        if (user._id !== userId) {
           return (
             <ListItem
-              key={user.userid} // Use a unique key for each list item
+              key={Math.random() * 100} // Use a unique key for each list item
               alignItems="flex-start"
               onClick={() => handleClick(user)} // Pass user.userid to handleClick
               sx={{
                 boxShadow:
-                selectUserDetails.userid === user.userid
+                selectUserDetails.userid === user._id
                     ? `0 0 10px ${userListOnSelectBoxShadow}`
                     : "none",
                 transition: "box-shadow 0.3s ease",
@@ -48,14 +46,14 @@ export default function UserList() {
             >
               <ListItemAvatar>
                 <Avatar
-                  alt={user.username}
-                  src={user.profilepicture} // Assuming you have profilepicture in user object
+                  alt={user.name}
+                  src={user.avatar} // Assuming you have profilepicture in user object
                   sx={{ width: 55, height: 55 }}
                 />
               </ListItemAvatar>
               <div className="chat-details">
                 <div className="text-head">
-                  <h4>{user.username}</h4>
+                  <h4>{user.name}</h4>
                   <p className="time unread">{user.lastMessageTime}</p>
                 </div>
                 <div className="text-message">
