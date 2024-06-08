@@ -61,16 +61,17 @@ export default function MessageInput() {
   };
 
   const handleFileOpen = (e) => {
+  };
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
     setFileMenuAnchor(e.currentTarget);
-    // Add file handling logic here
+    // Handle the selected file
+    console.log("Selected file:", file);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        chatBoxRef.current &&
-        !chatBoxRef.current.contains(event.target)
-      ) {
+      if (chatBoxRef.current && !chatBoxRef.current.contains(event.target)) {
         setIsEmojiPickerOpen(false);
       }
     };
@@ -88,10 +89,15 @@ export default function MessageInput() {
         sx={{
           position: "absolute",
           left: "1.0rem",
-          rotate: "30deg",
         }}
-        onClick={handleFileOpen}
+        onClick={() => inputRef.current.click()} // Trigger input file selection
       >
+        <input
+          type="file"
+          ref={inputRef}
+          style={{ display: "none" }} // Hide the input element
+          onChange={handleFileInputChange}
+        />
         <AttachFileIcon />
       </IconButton>
       <IconButton
