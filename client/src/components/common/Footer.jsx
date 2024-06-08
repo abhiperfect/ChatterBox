@@ -69,7 +69,7 @@ function Footer({
         borderBottomRightRadius: borderBottomRightRadius,
         padding: "5px",
         backgroundColor: footerBGColor,
-        height:'80px',
+        height:'74px',
         display:'flex',
         alignItems:'center',
         justifyContent:'center'      
