@@ -3,7 +3,13 @@ import SendIcon from "@mui/icons-material/Send";
 import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import AddIcon from "@mui/icons-material/Add";
-import MyEmojiPicker from "./MyEmojipicker.jsx";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { IconButton } from "@mui/material";
+import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data";
+import zIndex from "@mui/material/styles/zIndex";
+import useTheme from "@mui/system/useTheme";
+
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
 
@@ -13,18 +19,36 @@ export default function MessageInput() {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [chosenEmojis, setChosenEmojis] = useState([]);
   const [inputFocus, setInputFocus] = useState(false);
-
+  const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+  const theme = useTheme();
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
+  const chatBoxRef = useRef(null);
+
+  useEffect(() => {
+    // Activate send button if there's input or emojis
+    setSendButtonActive(
+      inputValue.trim().length > 0 || chosenEmojis.length > 0
+    );
+  }, [inputValue, chosenEmojis]);
 
   const handleInputChange = (event) => {
-
+    setInputValue(event.target.value);
   };
 
   const handleSendMessage = () => {
+    if (inputValue.trim().length > 0 || chosenEmojis.length > 0) {
+      // Send message logic here
+      console.log("Sending message:", inputValue + chosenEmojis.join(""));
+      setInputValue("");
+      setChosenEmojis([]);
+    }
   };
 
   const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
+    }
   };
 
   const toggleEmojiPicker = () => {
@@ -32,22 +56,60 @@ export default function MessageInput() {
   };
 
   const handleEmojiClick = (emoji) => {
-    setChosenEmojis([...chosenEmojis, emoji]);
+    setChosenEmojis([...chosenEmojis, emoji.native]);
     setInputFocus(true);
   };
 
+  const handleFileOpen = (e) => {
+    setFileMenuAnchor(e.currentTarget);
+    // Add file handling logic here
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        chatBoxRef.current &&
+        !chatBoxRef.current.contains(event.target)
+      ) {
+        setIsEmojiPickerOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="chatbox-input">
-      <AddIcon />
-      <div style={{ position: "relative" }}>
-        <InsertEmoticonIcon onClick={toggleEmojiPicker} />
+    <div className="chatbox-input" ref={chatBoxRef}>
+      <IconButton
+        sx={{
+          position: "absolute",
+          left: "1.0rem",
+          rotate: "30deg",
+        }}
+        onClick={handleFileOpen}
+      >
+        <AttachFileIcon />
+      </IconButton>
+      <IconButton
+        sx={{
+          position: "absolute",
+          left: "3.5rem",
+        }}
+        onClick={toggleEmojiPicker}
+      >
+        <InsertEmoticonIcon />
+      </IconButton>
+      <div style={{ position: "absolute", zIndex: "999", bottom: "63px" }}>
         {isEmojiPickerOpen && (
-          <div
-            ref={emojiPickerRef}
-            style={{ position: "absolute", zIndex: 999, top: "-466px" }}
-          >
-            <MyEmojiPicker selectedEmoji={handleEmojiClick} />
-          </div>
+          <Picker
+            theme={theme.palette.mode}
+            data={data}
+            onEmojiSelect={handleEmojiClick}
+          />
         )}
       </div>
       <input
@@ -59,11 +121,19 @@ export default function MessageInput() {
         ref={inputRef}
         onFocus={() => setInputFocus(true)}
         onBlur={() => setInputFocus(false)}
-      />{" "}
+        style={{ width: "100%" }} // Adjust padding to avoid overlap with icons
+      />
       {sendButtonActive ? (
-        <SendIcon onClick={handleSendMessage} />
+        <IconButton
+          sx={{ position: "absolute", right: "0.8rem" }}
+          onClick={handleSendMessage}
+        >
+          <SendIcon />
+        </IconButton>
       ) : (
-        <KeyboardVoiceIcon />
+        <IconButton sx={{ position: "absolute", right: "0.8rem" }}>
+          <KeyboardVoiceIcon />
+        </IconButton>
       )}
     </div>
   );
