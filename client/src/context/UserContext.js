@@ -6,6 +6,7 @@ const UserContext = createContext();
 const SenderContext = createContext();
 const ComponentContext = createContext();
 const MessageContext = createContext();
+const NotificationsContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const { isAuthenticated, user } = useAuth0();
@@ -17,7 +18,6 @@ export const UserProvider = ({ children }) => {
   });
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-
   //new way to creating
   const [selectUserDetails, setSelectedUserDetails] = useState({
     userId: 1000,
@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
     profilePicture: "https://www.w3schools.com/howto/img_avatar.png",
     isOnline: false,
   });
-  
+
   const [userDetails, setUserDetails] = useState({
     userid: 1,
     username: "Alice",
@@ -149,6 +149,23 @@ export const UserProvider = ({ children }) => {
     },
   ]);
 
+  const [friendRequestNotifications, setFriendRequestNotifications] = useState([
+    {
+      sender: {
+        avatar: "https://www.w3schools.com/howto/img_avatar.png",
+        name: "John Doe",
+      },
+      _id: "1",
+    },
+    {
+      sender: {
+        avatar: "https://www.w3schools.com/howto/img_avatar.png",
+        name: "John Boi",
+      },
+      _id: "2",
+    },
+  ]);
+
   useEffect(() => {
     const fetchMessages = async () => {
       if (userData.userId && selectedUserId) {
@@ -191,8 +208,7 @@ export const UserProvider = ({ children }) => {
   }, [isAuthenticated, user]);
 
   return (
-    <UserContext.Provider value={{ userDetails, setUserDetails, }}
-    >
+    <UserContext.Provider value={{ userDetails, setUserDetails }}>
       <SenderContext.Provider
         value={{ selectUserDetails, setSelectedUserDetails }}
       >
@@ -200,7 +216,9 @@ export const UserProvider = ({ children }) => {
           value={{ isRightContainerOpen, setIsRightContainerOpen }}
         >
           <MessageContext.Provider value={{ messages, setMessages }}>
-            {children}
+            <NotificationsContext.Provider value={{friendRequestNotifications, setFriendRequestNotifications}}>
+              {children}
+            </NotificationsContext.Provider>
           </MessageContext.Provider>
         </ComponentContext.Provider>
       </SenderContext.Provider>
@@ -212,3 +230,4 @@ export const useUserContext = () => useContext(UserContext);
 export const useSenderContext = () => useContext(SenderContext);
 export const useComponentContext = () => useContext(ComponentContext);
 export const useMessageContext = () => useContext(MessageContext);
+export const useNotificationsContext = () => useContext(NotificationsContext);

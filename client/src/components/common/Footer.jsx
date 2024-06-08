@@ -69,6 +69,10 @@ function Footer({
         borderBottomRightRadius: borderBottomRightRadius,
         padding: "5px",
         backgroundColor: footerBGColor,
+        height:'80px',
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center'      
       }}
     >
       <Container maxWidth="xl">
