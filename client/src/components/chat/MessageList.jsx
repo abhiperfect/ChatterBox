@@ -1,15 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { sampleMessage } from "../../constants/sampleData.js";
-import { motion } from "framer-motion";
-import moment from "moment";
-import RenderAttachment from "../common/RenderAttachment.jsx";
-import { fileFormat } from "../../lib/features.jsx";
-import { Box, Stack } from "@mui/material";
 import MessageComponent from "../common/MessageComponent.jsx";
+import { useMessageContext } from "../../context/UserContext.js";
+import { useUserContext } from "../../context/UserContext.js";
 
 export default function MessageList() {
   const chatContainerRef = useRef(null);
-  const selectedUserId = 2;
+  const { messages} = useMessageContext();
+  const {userDetails} = useUserContext();
+
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when messages change
@@ -17,7 +15,7 @@ export default function MessageList() {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [sampleMessage]);
+  }, [messages]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -33,8 +31,8 @@ export default function MessageList() {
       className="chat-container"
       ref={chatContainerRef}
     >
-             {sampleMessage.map((i) => (
-          <MessageComponent key={i._id} message={i} user={"1"} />
+             {messages.map((i) => (
+          <MessageComponent key={i._id} message={i} user={userDetails} />
         ))}
 
     </div>

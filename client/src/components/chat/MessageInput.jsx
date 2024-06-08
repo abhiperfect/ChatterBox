@@ -2,13 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
-import AddIcon from "@mui/icons-material/Add";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { IconButton } from "@mui/material";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
-import zIndex from "@mui/material/styles/zIndex";
 import useTheme from "@mui/system/useTheme";
+import {
+  useMessageContext,
+  useUserContext,
+  useSenderContext,
+} from "../../context/UserContext"; // Updated import
 
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
@@ -20,6 +23,11 @@ export default function MessageInput() {
   const [chosenEmojis, setChosenEmojis] = useState([]);
   const [inputFocus, setInputFocus] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+
+  const { setMessages } = useMessageContext();
+  const { userDetails } = useUserContext();
+  const { selectUserDetails } = useSenderContext();
+
   const theme = useTheme();
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
@@ -32,22 +40,45 @@ export default function MessageInput() {
     );
   }, [inputValue, chosenEmojis]);
 
+  const isValidMessage = (message) => {
+    return message.trim() !== "";
+  };
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const handleSendMessage = () => {
-    if (inputValue.trim().length > 0 || chosenEmojis.length > 0) {
-      // Send message logic here
-      console.log("Sending message:", inputValue + chosenEmojis.join(""));
+  const handleSendMessage = (event) => {
+    if (event && event.key && event.key !== "Enter" && event.type !== "click")
+      return;
+
+    if (isValidMessage(inputValue) || chosenEmojis.length > 0) {
+      const messageContent = inputValue + chosenEmojis.join("");
+      console.log("Sending message:", messageContent);
       setInputValue("");
       setChosenEmojis([]);
+
+      // Add the new message to the messages state
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          attachments: [],
+          content: messageContent,
+          _id: selectUserDetails.userid,
+          sender: {
+            _id: userDetails.userid,
+            name: userDetails.username,
+          },
+          chat: "chatId",
+          createdAt: new Date().toISOString(),
+        },
+      ]);
     }
   };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      handleSendMessage();
+      handleSendMessage(event);
     }
   };
 
@@ -56,12 +87,12 @@ export default function MessageInput() {
   };
 
   const handleEmojiClick = (emoji) => {
-    setChosenEmojis([...chosenEmojis, emoji.native]);
-    setInputFocus(true);
+    if (emoji) {
+      setInputValue(inputValue + emoji.native);
+    }
   };
 
-  const handleFileOpen = (e) => {
-  };
+  const handleFileOpen = (e) => {};
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     setFileMenuAnchor(e.currentTarget);
@@ -123,8 +154,7 @@ export default function MessageInput() {
         placeholder="Type your message..."
         value={inputValue + chosenEmojis.join("")}
         onChange={handleInputChange}
-        onKeyUp={handleKeyPress}
-        ref={inputRef}
+        onKeyPress={handleKeyPress} // Use onKeyPress instead of onKeyUp
         onFocus={() => setInputFocus(true)}
         onBlur={() => setInputFocus(false)}
         style={{ width: "100%" }} // Adjust padding to avoid overlap with icons
@@ -132,7 +162,7 @@ export default function MessageInput() {
       {sendButtonActive ? (
         <IconButton
           sx={{ position: "absolute", right: "0.8rem" }}
-          onClick={handleSendMessage}
+          onClick={handleSendMessage} // Pass the event to handleSendMessage
         >
           <SendIcon />
         </IconButton>

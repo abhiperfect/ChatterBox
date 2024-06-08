@@ -10,7 +10,7 @@ const MessageComponent = ({ message, user }) => {
   const { sender, content, attachments = [], createdAt } = message;
 
   // Determine if the message is from the same sender as the current user
-  const sameSender = sender._id === user;
+  const sameSender = sender._id === user.userid;
   const timeAgo = moment(createdAt).fromNow();
 
   return (

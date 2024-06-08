@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const UserContext = createContext();
 const SenderContext = createContext();
 const ComponentContext = createContext();
+const MessageContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const { isAuthenticated, user } = useAuth0();
@@ -15,7 +16,7 @@ export const UserProvider = ({ children }) => {
     connectedUsers: [],
   });
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [messages, setMessages] = useState([]);
+
 
   //new way to creating
   const [selectUserDetails, setSelectedUserDetails] = useState({
@@ -24,6 +25,7 @@ export const UserProvider = ({ children }) => {
     profilePicture: "https://www.w3schools.com/howto/img_avatar.png",
     isOnline: false,
   });
+  
   const [userDetails, setUserDetails] = useState({
     userid: 1,
     username: "Alice",
@@ -31,6 +33,121 @@ export const UserProvider = ({ children }) => {
     isOnline: true,
   });
   const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
+
+  const [messages, setMessages] = useState([
+    {
+      attachments: [],
+      content: "Piyush ka Message hai",
+      _id: "sfnsdjkfsdnfkjsbnd",
+      sender: {
+        _id: "2",
+        name: "Chaman ",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+
+    {
+      attachments: [
+        {
+          public_id: "asdsad 2",
+          url: "https://www.w3schools.com/howto/img_avatar.png",
+        },
+      ],
+      content: "",
+      _id: "1",
+      sender: {
+        _id: "1",
+        name: "Chaman  2",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+    {
+      attachments: [],
+      content: "Raman ka Message hai",
+      _id: "sfnsdjkfsdnfkjsbnd",
+      sender: {
+        _id: "1",
+        name: "Chaman ",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+
+    {
+      attachments: [
+        {
+          public_id: "asdsad 2",
+          url: "https://www.w3schools.com/howto/img_avatar.png",
+        },
+      ],
+      content: "",
+      _id: "1",
+      sender: {
+        _id: "2",
+        name: "Chaman  2",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+    {
+      attachments: [],
+      content: "Charan ka Message hai",
+      _id: "sfnsdjkfsdnfkjsbnd",
+      sender: {
+        _id: "2",
+        name: "Chaman ",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+
+    {
+      attachments: [
+        {
+          public_id: "asdsad 2",
+          url: "https://www.w3schools.com/howto/img_avatar.png",
+        },
+      ],
+      content: "",
+      _id: "1",
+      sender: {
+        _id: "1",
+        name: "Chaman  2",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+    {
+      attachments: [],
+      content: "Aman ka Message hai",
+      _id: "sfnsdjkfsdnfkjsbnd",
+      sender: {
+        _id: "1",
+        name: "Chaman ",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+
+    {
+      attachments: [
+        {
+          public_id: "asdsad 2",
+          url: "https://www.w3schools.com/howto/img_avatar.png",
+        },
+      ],
+      content: "",
+      _id: "1",
+      sender: {
+        _id: "2",
+        name: "Chaman  2",
+      },
+      chat: "chatId",
+      createdAt: "2024-02-12T10:41:30.630Z",
+    },
+  ]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -74,16 +191,7 @@ export const UserProvider = ({ children }) => {
   }, [isAuthenticated, user]);
 
   return (
-    <UserContext.Provider
-      value={{
-        userData,
-        selectedUserId,
-        setSelectedUserId,
-        messages,
-        setMessages,
-        userDetails,
-        setUserDetails,
-      }}
+    <UserContext.Provider value={{ userDetails, setUserDetails, }}
     >
       <SenderContext.Provider
         value={{ selectUserDetails, setSelectedUserDetails }}
@@ -91,7 +199,9 @@ export const UserProvider = ({ children }) => {
         <ComponentContext.Provider
           value={{ isRightContainerOpen, setIsRightContainerOpen }}
         >
-          {children}
+          <MessageContext.Provider value={{ messages, setMessages }}>
+            {children}
+          </MessageContext.Provider>
         </ComponentContext.Provider>
       </SenderContext.Provider>
     </UserContext.Provider>
@@ -101,3 +211,4 @@ export const UserProvider = ({ children }) => {
 export const useUserContext = () => useContext(UserContext);
 export const useSenderContext = () => useContext(SenderContext);
 export const useComponentContext = () => useContext(ComponentContext);
+export const useMessageContext = () => useContext(MessageContext);
