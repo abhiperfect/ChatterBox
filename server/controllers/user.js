@@ -12,9 +12,9 @@ import { getOtherMember } from "../lib/helper.js";
 const newUser = TryCatch(async (req, res, next) => {
   const { name, username, password, bio } = req.body;
 
-  // const file = req.file;
+  const file = req.file;
 
-  // if (!file) return next(new ErrorHandler("Please Upload Avatar"));
+  if (!file) return next(new ErrorHandler("Please Upload Avatar"));
 
   // const result = await uploadFilesToCloudinary([file]);
   const result = [
