@@ -9,7 +9,8 @@ import {
   sendAttachments,
   getChatDetails,
   renameGroup,
-  deleteChat
+  deleteChat,
+  getMessages
 } from "../controllers/chat.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -49,6 +50,9 @@ app.post(
   validateHandler,
   sendAttachments
 );
+// GET MESSAGES
+app.get("/message/:id", chatIdValidator(), validateHandler, getMessages);
+
 
 //GET CHAT DETAILS
 app
