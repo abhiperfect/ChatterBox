@@ -5,7 +5,8 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './utils/features.js';
 import { errorMiddleware } from './middleware/error.js';
 import userRoute from './routes/user.js';
-
+import chatRoute from "./routes/chat.js";
+import {createUser} from './seeders/user.js'
 const app = express();
 
 dotenv.config({
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 // ROUTES
 app.use('/api/v1/user', userRoute);
+app.use("/api/v1/chat", chatRoute);
 
 app.get('/', (req, res) => {
   res.send('server is ok');

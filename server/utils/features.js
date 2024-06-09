@@ -2,12 +2,11 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config({
-  path: '../.env',
+  path: "../.env",
 });
-
 
 const cookieOptions = {
   maxAge: 15 * 24 * 60 * 60 * 1000,
@@ -33,5 +32,12 @@ const sendToken = (res, user, code, message) => {
     message,
   });
 };
+const emitEvent = (req, event, users, data) => {
+  // const io = req.app.get("io");
+  // const usersSocket = getSockets(users);
+  // io.to(usersSocket).emit(event, data);
+  console.log("Working emit event");
+};
 
-export { connectDB, sendToken, cookieOptions };
+
+export { connectDB, sendToken, cookieOptions, emitEvent };
