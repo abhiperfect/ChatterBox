@@ -1,34 +1,37 @@
 import express from 'express';
 import bodyParser from 'body-parser'; 
-import dotenv from "dotenv";
-import cors from 'cors';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import { connectDB } from './utils/features.js';
+import { errorMiddleware } from './middleware/error.js';
+import userRoute from './routes/user.js';
 
 const app = express();
-import {connectDB} from "./utils/features.js";
-
-
 
 dotenv.config({
-  path: "./.env",
+  path: './.env',
 });
 
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 8000;
 
-
 connectDB(mongoURI);
 
 //%%MIDDLEWARE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-app.use(cors());
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 //%%MIDDLEWARE END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-app.get('/',( req, res)=>{
-   res.send('server is ok');
-})
+// ROUTES
+app.use('/api/v1/user', userRoute);
 
+app.get('/', (req, res) => {
+  res.send('server is ok');
+});
 
-app.listen(port, ()=>{
-  console.log(`Server is runnig on port ${port}`);
-})
+app.use(errorMiddleware);
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
