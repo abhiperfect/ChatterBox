@@ -7,7 +7,8 @@ import {
   removeMember,
   leaveGroup,
   sendAttachments,
-  getChatDetails
+  getChatDetails,
+  renameGroup
 } from "../controllers/chat.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -52,6 +53,7 @@ app.post(
 app
   .route("/:id")
   .get(chatIdValidator(), validateHandler, getChatDetails)
+  .put(renameValidator(), validateHandler, renameGroup)
 
 
 export default app;
