@@ -8,7 +8,8 @@ import {
   leaveGroup,
   sendAttachments,
   getChatDetails,
-  renameGroup
+  renameGroup,
+  deleteChat
 } from "../controllers/chat.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -54,6 +55,6 @@ app
   .route("/:id")
   .get(chatIdValidator(), validateHandler, getChatDetails)
   .put(renameValidator(), validateHandler, renameGroup)
-
+  .delete(chatIdValidator(), validateHandler, deleteChat);
 
 export default app;
