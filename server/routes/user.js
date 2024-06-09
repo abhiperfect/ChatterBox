@@ -1,6 +1,13 @@
 import express from "express";
 import { singleAvatar } from "../middleware/multer.js";
-import { login, logout, newUser,getMyProfile,searchUser } from "../controllers/user.js";
+import {
+  login,
+  logout,
+  newUser,
+  getMyProfile,
+  searchUser,
+  sendFriendRequest,
+} from "../controllers/user.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
   acceptRequestValidator,
@@ -12,7 +19,6 @@ import {
 
 const app = express();
 
-
 app.post("/new", singleAvatar, registerValidator(), validateHandler, newUser);
 app.post("/login", loginValidator(), validateHandler, login);
 // After here user must be logged in to access the routes
@@ -23,5 +29,11 @@ app.get("/me", getMyProfile);
 app.get("/logout", logout);
 
 app.get("/search", searchUser);
+app.put(
+  "/sendrequest",
+  sendRequestValidator(),
+  validateHandler,
+  sendFriendRequest
+);
 
 export default app;
