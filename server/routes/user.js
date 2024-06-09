@@ -8,6 +8,7 @@ import {
   searchUser,
   sendFriendRequest,
   acceptFriendRequest,
+  getMyNotifications,
 } from "../controllers/user.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -42,5 +43,6 @@ app.put(
   validateHandler,
   acceptFriendRequest
 );
+app.get("/notifications", getMyNotifications);
 
 export default app;
