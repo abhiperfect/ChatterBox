@@ -1,5 +1,5 @@
 import express from "express";
-import { newGroupChat } from "../controllers/chat.js";
+import { newGroupChat, getMyChats } from "../controllers/chat.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
 const app = express.Router();
@@ -9,5 +9,6 @@ const app = express.Router();
 app.use(isAuthenticated);
 
 app.post("/new", newGroupChat);
+app.get("/my", getMyChats);
 
 export default app;
