@@ -7,6 +7,7 @@ import {
   getMyProfile,
   searchUser,
   sendFriendRequest,
+  acceptFriendRequest,
 } from "../controllers/user.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -34,6 +35,12 @@ app.put(
   sendRequestValidator(),
   validateHandler,
   sendFriendRequest
+);
+app.put(
+  "/acceptrequest",
+  acceptRequestValidator(),
+  validateHandler,
+  acceptFriendRequest
 );
 
 export default app;

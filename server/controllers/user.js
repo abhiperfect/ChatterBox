@@ -1,7 +1,7 @@
 import { compare } from "bcrypt";
 import { TryCatch } from "../middleware/error.js";
 import { User } from "../models/user.js";
-import { sendToken, cookieOptions,emitEvent, } from "../utils/features.js";
+import { sendToken, cookieOptions, emitEvent } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
 import { Chat } from "../models/chat.js";
 import { Request } from "../models/request.js";
@@ -108,8 +108,10 @@ const searchUser = TryCatch(async (req, res) => {
 const sendFriendRequest = TryCatch(async (req, res, next) => {
   const { userId } = req.body;
 
-  const request = await Request.findOne({         //Checking if any of user sent the request to one of them
-    $or: [                                         //if yes then sent message "Request already sent"
+  const request = await Request.findOne({
+    //Checking if any of user sent the request to one of them
+    $or: [
+      //if yes then sent message "Request already sent"
       { sender: req.user, receiver: userId },
       { sender: userId, receiver: req.user },
     ],
@@ -130,4 +132,54 @@ const sendFriendRequest = TryCatch(async (req, res, next) => {
   });
 });
 
-export { login, newUser, logout, getMyProfile, searchUser, sendFriendRequest };
+const acceptFriendRequest = TryCatch(async (req, res, next) => {
+  const { requestId, accept } = req.body;
+
+  const request = await Request.findById(requestId)
+    .populate("sender", "name")
+    .populate("receiver", "name");
+
+  if (!request) return next(new ErrorHandler("Request not found", 404));
+
+  if (request.receiver._id.toString() !== req.user.toString())
+    return next(
+      new ErrorHandler("You are not authorized to accept this request", 401)
+    );
+
+  if (!accept) {
+    await request.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Friend Request Rejected",
+    });
+  }
+
+  const members = [request.sender._id, request.receiver._id];
+
+  await Promise.all([
+    Chat.create({
+      members,
+      name: `${request.sender.name}-${request.receiver.name}`,
+    }),
+    request.deleteOne(),
+  ]);
+
+  emitEvent(req, REFETCH_CHATS, members);
+
+  return res.status(200).json({
+    success: true,
+    message: "Friend Request Accepted",
+    senderId: request.sender._id,
+  });
+});
+
+export {
+  login,
+  newUser,
+  logout,
+  getMyProfile,
+  searchUser,
+  sendFriendRequest,
+  acceptFriendRequest,
+};
