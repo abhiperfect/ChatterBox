@@ -5,7 +5,8 @@ import {
   getMyGroups,
   addMembers,
   removeMember,
-  leaveGroup
+  leaveGroup,
+  sendAttachments
 } from "../controllers/chat.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -17,6 +18,7 @@ import {
   sendAttachmentsValidator,
   validateHandler,
 } from "../lib/validators.js";
+import { attachmentsMulter } from "../middleware/multer.js";
 
 const app = express.Router();
 
@@ -35,5 +37,12 @@ app.put(
   removeMember
 );
 app.delete("/leave/:id", chatIdValidator(), validateHandler, leaveGroup);
+app.post(
+  "/message",
+  attachmentsMulter,
+  sendAttachmentsValidator(),
+  validateHandler,
+  sendAttachments
+);
 
 export default app;
