@@ -30,7 +30,7 @@ const app = express.Router();
 
 app.use(isAuthenticated);
 
-app.post("/new", newGroupChat);
+app.post("/new", newGroupValidator(), validateHandler, newGroupChat);
 app.get("/my", getMyChats);
 app.get("/my/groups", getMyGroups);
 app.put("/addmembers", addMemberValidator(), validateHandler, addMembers);
