@@ -34,7 +34,17 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
         <Fragment>
           <Typography
             variant="body1"
-            sx={{ fontWeight: "bold", fontSize: "18px" }}
+            sx={{
+              flexGrow: 1,
+              display: "-webkit-box",
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "100%",
+              fontWeight: "bold",
+              fontSize: "18px",
+            }}
           >
             {username}
           </Typography>

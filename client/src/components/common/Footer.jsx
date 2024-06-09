@@ -23,11 +23,13 @@ import NotificationsIcon from "../ui/icons/Notifications.jsx";
 import CallsIcon from "../ui/icons/Calls.jsx";
 import StatusIcon from "../ui/icons/Status.jsx";
 import SettingIcon from "../ui/icons/Setting.jsx";
+import NewGroupIcon from "../ui/icons/NewGroup.jsx";
 
 const pages = [
   <NotificationsIcon />,
   <CallsIcon />,
   <StatusIcon />,
+  <NewGroupIcon/>,
   <SettingIcon />,
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];

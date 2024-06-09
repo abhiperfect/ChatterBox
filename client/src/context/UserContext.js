@@ -9,6 +9,7 @@ const MessageContext = createContext();
 const NotificationsContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  //SENDER CONTEXT
   const [selectUserDetails, setSelectedUserDetails] = useState({
     userId: 1000,
     username: "NO-User",
@@ -16,56 +17,76 @@ export const UserProvider = ({ children }) => {
     isOnline: false,
   });
 
+  //USER CONTEXT
+
+  //DETAIL OF CURRENT USER LOGIN
   const [userDetails, setUserDetails] = useState({
     userid: 1,
     username: "Alice",
     profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
     isOnline: true,
-    groupChat:false,
+    groupChat: false,
   });
-  
-  const [userConnections, setUserConnections ] = useState(
-    [
-      {
-        _id: "1",
-        name: "John Doe",
-        avatar: "https://www.w3schools.com/howto/img_avatar.png",
-        groupChat: false,
-        members: ["1", "2"],
-        lastMessage: "Did you complete the project?",
-        lastMessageTime: "1:20 PM",
-        unreadMessages: 0,
-        isOnline:false,
-      },
-    
-      {
-        _id: "2",
-        name: "John Boi",
-        avatar: "https://www.w3schools.com/howto/img_avatar.png",
-        groupChat: true,
-        members: ["1", "2"],
-        lastMessage: "How about you? How's everything going on your end?",
-        lastMessageTime: "2:55 PM",
-        unreadMessages: 1,
-        isOnline:true,
-      },
-      {
-        _id: "3",
-        name: "Alice",
-        avatar: "https://www.w3schools.com/howto/img_avatar.png",
-        groupChat: false,
-        members: ["1", "2"],
-        lastMessage: "Did you complete the project?",
-        lastMessageTime: "1:20 PM",
-        unreadMessages: 0,
-        isOnline:true,
-      },
-    ]
-  );
-  
 
+  //THIS FOR FRIENDS LIST AND ADD FRIENDS IN NEW GROUP
+  const [userConnections, setUserConnections] = useState([
+    {
+      _id: "1",
+      name: "John Doe",
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      groupChat: false,
+      members: ["1", "2"],
+      lastMessage: "Did you complete the project?",
+      lastMessageTime: "1:20 PM",
+      unreadMessages: 0,
+      isOnline: false,
+    },
+
+    {
+      _id: "2",
+      name: "John Boi",
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      groupChat: true,
+      members: ["1", "2"],
+      lastMessage: "How about you? How's everything going on your end?",
+      lastMessageTime: "2:55 PM",
+      unreadMessages: 1,
+      isOnline: true,
+    },
+    {
+      _id: "3",
+      name: "Alice",
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      groupChat: false,
+      members: ["1", "2"],
+      lastMessage: "Did you complete the project?",
+      lastMessageTime: "1:20 PM",
+      unreadMessages: 0,
+      isOnline: true,
+    },
+  ]);
+
+  //THIS FOR SEARCHING NEW FRIENDS
+  const [allUserList, setAllUserList] = useState([
+    {
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      name: "John Doe",
+      _id: "1",
+    },
+    {
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      name: "John Boi",
+      _id: "2",
+    },
+  ]);
+
+  //COMPONENT CONTEXT
   const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
 
+  const [isSearchBarOpen, setSearchBarOpen] = useState(false);
+
+  //MESSAGE CONTEXT
+  
   const [messages, setMessages] = useState([
     {
       attachments: [],
@@ -181,6 +202,7 @@ export const UserProvider = ({ children }) => {
     },
   ]);
 
+  //NOTIFICATION CONTEXT
   const [friendRequestNotifications, setFriendRequestNotifications] = useState([
     {
       sender: {
@@ -199,15 +221,34 @@ export const UserProvider = ({ children }) => {
   ]);
 
   return (
-    <UserContext.Provider value={{ userDetails, setUserDetails,userConnections, setUserConnections }}>
+    <UserContext.Provider
+      value={{
+        userDetails,
+        setUserDetails,
+        userConnections,
+        setUserConnections,
+        allUserList,
+        setAllUserList,
+      }}
+    >
       <SenderContext.Provider
         value={{ selectUserDetails, setSelectedUserDetails }}
       >
         <ComponentContext.Provider
-          value={{ isRightContainerOpen, setIsRightContainerOpen }}
+          value={{
+            isRightContainerOpen,
+            setIsRightContainerOpen,
+            isSearchBarOpen,
+            setSearchBarOpen,
+          }}
         >
           <MessageContext.Provider value={{ messages, setMessages }}>
-            <NotificationsContext.Provider value={{friendRequestNotifications, setFriendRequestNotifications}}>
+            <NotificationsContext.Provider
+              value={{
+                friendRequestNotifications,
+                setFriendRequestNotifications,
+              }}
+            >
               {children}
             </NotificationsContext.Provider>
           </MessageContext.Provider>

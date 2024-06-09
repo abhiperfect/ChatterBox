@@ -37,34 +37,16 @@ export const samepleChats = [
 
 export const sampleUsers = [
   {
-    userid: 1,
-    username: "Alice",
-    profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
-    lastMessage: "How about you? How's everything going on your end?",
-    lastMessageTime: "2:55 PM",
-    unreadMessages: 1,
-    isOnline:true,
+    avatar: "https://www.w3schools.com/howto/img_avatar.png",
+    name: "John Doe",
+    _id: "1",
   },
   {
-    userid: 2,
-    username: "Bob",
-    profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
-    lastMessage: "Did you complete the project?",
-    lastMessageTime: "1:20 PM",
-    unreadMessages: 0,
-    isOnline:false,
-  },
-  {
-    userid: 3,
-    username: "Charlie",
-    profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
-    lastMessage: "Let's catch up soon!",
-    lastMessageTime: "Yesterday",
-    unreadMessages: 2,
-    isOnline:true,
+    avatar: "https://www.w3schools.com/howto/img_avatar.png",
+    name: "John Boi",
+    _id: "2",
   },
 ];
-
 
 export const sampleNotifications = [
   {
