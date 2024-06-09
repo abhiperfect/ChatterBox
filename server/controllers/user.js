@@ -15,7 +15,7 @@ const newUser = TryCatch(async (req, res, next) => {
   // const result = await uploadFilesToCloudinary([file]);
   const result = [
     {
-      public_id:"23456786786786",
+      public_id: "23456786786786",
       url: "sxascsdvcdfvdfbfbb gff hb ",
     },
   ];
@@ -51,6 +51,18 @@ const login = TryCatch(async (req, res, next) => {
 
   sendToken(res, user, 200, `Welcome Back, ${user.username}`);
 });
+
+const getMyProfile = TryCatch(async (req, res, next) => {
+  const user = await User.findById(req.user);
+
+  if (!user) return next(new ErrorHandler("User not found", 404));
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
 const logout = TryCatch(async (req, res) => {
   return res
     .status(200)
@@ -61,4 +73,4 @@ const logout = TryCatch(async (req, res) => {
     });
 });
 
-export { login, newUser, logout };
+export { login, newUser, logout, getMyProfile };
