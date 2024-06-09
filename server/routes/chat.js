@@ -6,7 +6,8 @@ import {
   addMembers,
   removeMember,
   leaveGroup,
-  sendAttachments
+  sendAttachments,
+  getChatDetails
 } from "../controllers/chat.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import {
@@ -37,6 +38,8 @@ app.put(
   removeMember
 );
 app.delete("/leave/:id", chatIdValidator(), validateHandler, leaveGroup);
+
+//SEND ATTACHMENTS
 app.post(
   "/message",
   attachmentsMulter,
@@ -44,5 +47,11 @@ app.post(
   validateHandler,
   sendAttachments
 );
+
+//GET CHAT DETAILS
+app
+  .route("/:id")
+  .get(chatIdValidator(), validateHandler, getChatDetails)
+
 
 export default app;
