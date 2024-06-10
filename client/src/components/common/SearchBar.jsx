@@ -49,7 +49,6 @@ function SearchBar({
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
-  console.log(allUserList);
 
   return (
     <AppBar

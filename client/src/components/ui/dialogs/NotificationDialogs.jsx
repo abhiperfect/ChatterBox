@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -11,6 +11,11 @@ import FriendRequestNotification from "../template/FriendRequestNotification";
 import { Box, Typography } from "@mui/material";
 import { useNotificationsContext } from "../../../context/UserContext";
 import { useMessageContext } from "../../../context/UserContext";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useUserContext } from "../../../context/UserContext";
+import { server } from "../../../constants/config";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -32,7 +37,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 export default function NotificationsDialog({ children }) {
   const [open, setOpen] = React.useState(false);
-  const { friendRequestNotifications } = useNotificationsContext();
+  const { friendRequestNotifications, setFriendRequestNotifications } =
+    useNotificationsContext();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -40,6 +47,30 @@ export default function NotificationsDialog({ children }) {
   const handleClose = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:8000/api/v1/user/notifications",
+          {
+            withCredentials: true,
+          }
+        );
+
+        const { allRequests } = data;
+        setFriendRequestNotifications(allRequests);
+
+        for (const noti of allRequests) {
+          toast.success(`${noti.sender.name} sent you friend request`);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        toast.error("Error fetching notifications");
+      }
+    };
+
+    fetchNotifications();
+  }, [setFriendRequestNotifications]);
 
   return (
     <React.Fragment>
@@ -76,11 +107,11 @@ export default function NotificationsDialog({ children }) {
             }}
           >
             {friendRequestNotifications &&
-              friendRequestNotifications.map((notification, index) => (
+              friendRequestNotifications?.map((notification, index) => (
                 <FriendRequestNotification
-                  key={notification._id}
-                  avatarSrc={notification.sender.avatar}
-                  name={notification.sender.name}
+                  key={notification?._id}
+                  avatarSrc={notification?.sender?.avatar}
+                  name={notification?.sender?.name}
                 />
               ))}
             {!friendRequestNotifications && (

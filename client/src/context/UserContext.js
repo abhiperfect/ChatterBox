@@ -188,22 +188,7 @@ export const UserProvider = ({ children }) => {
   ]);
 
   //NOTIFICATION CONTEXT
-  const [friendRequestNotifications, setFriendRequestNotifications] = useState([
-    {
-      sender: {
-        avatar: "https://www.w3schools.com/howto/img_avatar.png",
-        name: "John Doe",
-      },
-      _id: "1",
-    },
-    {
-      sender: {
-        avatar: "https://www.w3schools.com/howto/img_avatar.png",
-        name: "John Boi",
-      },
-      _id: "2",
-    },
-  ]);
+  const [friendRequestNotifications, setFriendRequestNotifications] = useState();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -261,7 +246,7 @@ export const UserProvider = ({ children }) => {
             <NotificationsContext.Provider
               value={{
                 friendRequestNotifications,
-                setFriendRequestNotifications,
+                setFriendRequestNotifications
               }}
             >
               {children}

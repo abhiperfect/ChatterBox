@@ -9,7 +9,7 @@ import { useNotificationsContext } from "../../../context/UserContext";
 export default function NotificationsIcon({badgeContent}) {
   const {friendRequestNotifications} = useNotificationsContext();
 
-  const messageCount = friendRequestNotifications.length;
+  const messageCount = friendRequestNotifications?.length;
 
   return (
     <NotificaionsDialogs>
