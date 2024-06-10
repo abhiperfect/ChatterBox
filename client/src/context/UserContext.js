@@ -16,6 +16,7 @@ export const UserProvider = ({ children }) => {
     profilePicture: "https://www.w3schools.com/howto/img_avatar.png",
     isOnline: false,
   });
+  
 
   //USER CONTEXT
 

@@ -51,7 +51,7 @@ export default function NotificationsDialog({ children }) {
     const fetchNotifications = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/user/notifications",
+          `${server}/api/v1/user/notifications`,
           {
             withCredentials: true,
           }
@@ -71,6 +71,9 @@ export default function NotificationsDialog({ children }) {
 
     fetchNotifications();
   }, [setFriendRequestNotifications]);
+
+  
+
 
   return (
     <React.Fragment>
@@ -110,6 +113,7 @@ export default function NotificationsDialog({ children }) {
               friendRequestNotifications?.map((notification, index) => (
                 <FriendRequestNotification
                   key={notification?._id}
+                  requestId={notification?._id}
                   avatarSrc={notification?.sender?.avatar}
                   name={notification?.sender?.name}
                 />
