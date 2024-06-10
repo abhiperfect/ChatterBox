@@ -24,14 +24,9 @@ import CallsIcon from "../ui/icons/Calls.jsx";
 import StatusIcon from "../ui/icons/Status.jsx";
 import SettingIcon from "../ui/icons/Setting.jsx";
 import NewGroupIcon from "../ui/icons/NewGroup.jsx";
+import Logout from "../ui/icons/Logout.jsx";
 
-const pages = [
-  <NotificationsIcon />,
-  // <CallsIcon />,
-  // <StatusIcon />,
-  <NewGroupIcon/>,
-  // <SettingIcon />,
-];
+const pages = [<NotificationsIcon />, <NewGroupIcon />, <Logout />];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Footer({
@@ -71,15 +66,15 @@ function Footer({
         borderBottomRightRadius: borderBottomRightRadius,
         padding: "5px",
         backgroundColor: footerBGColor,
-        height:'74px',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center'      
+        height: "74px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}   >
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -111,7 +106,11 @@ function Footer({
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}  style={{ backgroundColor:footerBGColor}} >
+                <MenuItem
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  style={{ backgroundColor: footerBGColor }}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}

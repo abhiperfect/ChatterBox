@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { server } from "../constants/config.jsx";
+import { useUserContext, useComponentContext } from "../context/UserContext.js";
 
 const useErrors = (errors = []) => {
   useEffect(() => {
@@ -60,4 +63,26 @@ const useSocketEvents = (socket, handlers) => {
   }, [socket, handlers]);
 };
 
-export { useErrors, useAsyncMutation, useSocketEvents };
+const useLogoutHandler = () => {
+  const { setUserDetails } = useUserContext();
+  const { setLoader } = useComponentContext();
+
+  const logoutHandler = async () => {
+    try {
+      setLoader(true);
+      const { data } = await axios.get(`${server}/api/v1/user/logout`, {
+        withCredentials: true,
+      });
+      setUserDetails();
+      setLoader(false);
+      toast.success(data.message);
+    } catch (error) {
+      setLoader(false);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  return logoutHandler;
+};
+
+export { useErrors, useAsyncMutation, useSocketEvents, useLogoutHandler };
