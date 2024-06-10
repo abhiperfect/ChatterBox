@@ -27,10 +27,10 @@ import NewGroupIcon from "../ui/icons/NewGroup.jsx";
 
 const pages = [
   <NotificationsIcon />,
-  <CallsIcon />,
-  <StatusIcon />,
+  // <CallsIcon />,
+  // <StatusIcon />,
   <NewGroupIcon/>,
-  <SettingIcon />,
+  // <SettingIcon />,
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -79,7 +79,7 @@ function Footer({
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}   >
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -111,7 +111,7 @@ function Footer({
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={handleCloseNavMenu}  style={{ backgroundColor:footerBGColor}} >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}

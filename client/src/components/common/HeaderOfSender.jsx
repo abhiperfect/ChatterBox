@@ -42,7 +42,7 @@ function HeaderOfSender({
     "Profile",
     "Account",
     "Dashboard",
-    <button onClick={() => {}}>Log Out</button>,
+    "logout",
   ];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -141,7 +141,7 @@ function HeaderOfSender({
             <Tooltip title="Open settings" style={{ display: "flex" }}>
               <ChatOption />
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <MyAvatar  userDetails={selectUserDetails} />
+                <MyAvatar userDetails={selectUserDetails} />
               </IconButton>
             </Tooltip>
             <Menu
