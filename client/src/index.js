@@ -1,7 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-
+import { UserProvider } from "./context/UserContext.js";
 const root = createRoot(document.getElementById("root"));
 
-root.render(<App />);
+root.render(
+  <UserProvider>
+    <App />
+  </UserProvider>
+);

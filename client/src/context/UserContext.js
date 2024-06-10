@@ -20,13 +20,7 @@ export const UserProvider = ({ children }) => {
   //USER CONTEXT
 
   //DETAIL OF CURRENT USER LOGIN
-  const [userDetails, setUserDetails] = useState({
-    userid: 1,
-    username: "Alice",
-    profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
-    isOnline: true,
-    groupChat: false,
-  });
+  const [userDetails, setUserDetails] = useState();
 
   //THIS FOR FRIENDS LIST AND ADD FRIENDS IN NEW GROUP
   const [userConnections, setUserConnections] = useState([

@@ -66,8 +66,8 @@ export default function MessageInput() {
           content: messageContent,
           _id: selectUserDetails.userid,
           sender: {
-            _id: userDetails.userid,
-            name: userDetails.username,
+            _id: userDetails?._id,
+            name: userDetails?.username,
           },
           chat: "chatId",
           createdAt: new Date().toISOString(),
