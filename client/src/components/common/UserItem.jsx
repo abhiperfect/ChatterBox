@@ -3,8 +3,6 @@ import { Avatar, IconButton, ListItem, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 import { transformImage } from "../../lib/features";
 
-
-
 const UserItem = ({
   user,
   handler,
@@ -41,6 +39,7 @@ const UserItem = ({
         </Typography>
 
         <IconButton
+          key={_id}
           size="small"
           sx={{
             bgcolor: isAdded ? "error.main" : "primary.main",
@@ -49,8 +48,7 @@ const UserItem = ({
               bgcolor: isAdded ? "error.dark" : "primary.dark",
             },
           }}
-          onClick={() => handler(_id)}
-          disabled={handlerIsLoading}
+          onClick={() => handler(_id,name)}
         >
           {isAdded ? <RemoveIcon /> : <AddIcon />}
         </IconButton>

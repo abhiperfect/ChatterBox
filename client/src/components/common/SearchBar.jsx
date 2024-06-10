@@ -13,6 +13,7 @@ import { useComponentContext } from "../../context/UserContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { Stack } from "@mui/material";
 import { Input } from "@mui/material";
+import { useUserContext } from "../../context/UserContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -28,42 +29,15 @@ const Search = styled("div")(({ theme }) => ({
     width: "auto",
   },
 }));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
-
 function SearchBar({
   borderTopLeftRadius,
   borderBottomLeftRadius,
   borderTopRightRadius,
   borderBottomRightRadius,
 }) {
-  const { searchBarOpen, setSearchBarOpen } = useComponentContext();
-  const [searchInput, setSearchInput] = useState("");
-  const searchBarRef = useRef(null);
+  const { setSearchBarOpen } = useComponentContext();
+
+  const { setSearchQuery, allUserList } = useUserContext();
 
   const handleSearchClick = () => {
     setSearchBarOpen(true);
@@ -73,8 +47,9 @@ function SearchBar({
   };
 
   const handleInputChange = (event) => {
-    setSearchInput(event.target.value);
+    setSearchQuery(event.target.value);
   };
+  console.log(allUserList);
 
   return (
     <AppBar
@@ -106,7 +81,7 @@ function SearchBar({
           onChange={handleInputChange}
           onClick={handleSearchClick}
         ></Input>
-        <CloseIcon onClick={closeSearchBar} sx={{ cursor:'pointer' }} />
+        <CloseIcon onClick={closeSearchBar} sx={{ cursor: "pointer" }} />
       </Search>
     </AppBar>
   );

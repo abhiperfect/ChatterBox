@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import SimpleContainer from "../common/SimpleContainer";
 import UserList from "./UserList";
 import SearchBar from "../common/SearchBar";
@@ -9,21 +9,34 @@ import { Box } from "@mui/material";
 import UserItem from "../common/UserItem";
 import { sampleUsers } from "../../constants/sampleData";
 import { useUserContext } from "../../context/UserContext";
+import axios from "axios";
+import { server } from "../../constants/config";
+import toast from "react-hot-toast";
 
 export default function LeftContainer() {
   const { isSearchBarOpen } = useComponentContext();
-  const {allUserList} = useUserContext();
-  
-  const [isLoadingSendFriendRequest, setIsLoadingSendFriendRequest] = useState(false);
-  const addFriendHandler = (userId) => {
-    // Handle friend request logic here
+  const { allUserList, userDetails } = useUserContext();
+
+  const [isLoadingSendFriendRequest, setIsLoadingSendFriendRequest] =
+    useState(false);
+
+  const addFriendHandler = async (userId, name) => {
     setIsLoadingSendFriendRequest(true);
-    // Simulating a network request
-    setTimeout(() => {
+    try {
+      // Make a request to the send friend request endpoint
+      const response = await axios.put(
+        `${server}/api/v1/user/sendrequest`,
+        { userId },
+        { withCredentials: true }
+      );
+      toast.success(`Friend request sent to ${name}`);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
       setIsLoadingSendFriendRequest(false);
-      alert(`Friend request sent to user with ID: ${userId}`);
-    }, 2000);
+    }
   };
+
   return (
     <>
       <div style={{ paddingLeft: "0px", paddingRight: "0px" }}>
@@ -36,15 +49,17 @@ export default function LeftContainer() {
           {!isSearchBarOpen && <UserList />}
           {isSearchBarOpen && (
             <Box>
-              {allUserList.map((user) => (
+            {allUserList
+              ?.filter(user => user?._id !== userDetails?._id)
+              ?.map(user => (
                 <UserItem
                   user={user}
-                  key={user._id}
-                  handler={() => addFriendHandler(user._id)}
+                  key={user?._id}
+                  handler={() => addFriendHandler(user?._id, user?.name)}
                   handlerIsLoading={isLoadingSendFriendRequest}
                 />
               ))}
-            </Box>
+          </Box>
           )}
         </SimpleContainer>
       </div>

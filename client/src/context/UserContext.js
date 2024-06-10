@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
+import { server } from "../constants/config";
 
 const UserContext = createContext();
 const SenderContext = createContext();
@@ -61,18 +61,7 @@ export const UserProvider = ({ children }) => {
   ]);
 
   //THIS FOR SEARCHING NEW FRIENDS
-  const [allUserList, setAllUserList] = useState([
-    {
-      avatar: "https://www.w3schools.com/howto/img_avatar.png",
-      name: "John Doe",
-      _id: "1",
-    },
-    {
-      avatar: "https://www.w3schools.com/howto/img_avatar.png",
-      name: "John Boi",
-      _id: "2",
-    },
-  ]);
+  const [allUserList, setAllUserList] = useState();
 
   //COMPONENT CONTEXT
   const [isRightContainerOpen, setIsRightContainerOpen] = useState(false);
@@ -216,6 +205,32 @@ export const UserProvider = ({ children }) => {
     },
   ]);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      fetchSearchResults();
+    }, 0);
+
+    const fetchSearchResults = async () => {
+      try {
+        const response = await axios.get(
+          `${server}/api/v1/user/search?name=${searchQuery}`,
+          {
+            withCredentials: true,
+          }
+        );
+        const users = response.data.users;
+        setAllUserList(users);
+      } catch (error) {
+        console.error("Error searching users:", error);
+      }
+    };
+    return () => {
+      clearTimeout(timeOutId);
+    };
+  }, [searchQuery, setAllUserList]);
+
   return (
     <UserContext.Provider
       value={{
@@ -225,6 +240,8 @@ export const UserProvider = ({ children }) => {
         setUserConnections,
         allUserList,
         setAllUserList,
+        searchQuery,
+        setSearchQuery,
       }}
     >
       <SenderContext.Provider
