@@ -79,8 +79,10 @@ export const UserProvider = ({ children }) => {
 
   const [isSearchBarOpen, setSearchBarOpen] = useState(false);
 
+  const [loader, setLoader] = useState(true);
+
   //MESSAGE CONTEXT
-  
+
   const [messages, setMessages] = useState([
     {
       attachments: [],
@@ -234,6 +236,8 @@ export const UserProvider = ({ children }) => {
             setIsRightContainerOpen,
             isSearchBarOpen,
             setSearchBarOpen,
+            loader,
+            setLoader,
           }}
         >
           <MessageContext.Provider value={{ messages, setMessages }}>
