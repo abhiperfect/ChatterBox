@@ -11,25 +11,24 @@ import {
   Typography,
 } from "@mui/material";
 import toast from "react-hot-toast";
-import axios from 'axios';
+import axios from "axios";
 import { server } from "../constants/config";
 import { useUserContext } from "../context/UserContext";
-
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
   const [userData, setUserData] = useState({
-    name: '',
-    bio: '',
-    username: '',
-    password: '',
+    name: "",
+    bio: "",
+    username: "",
+    password: "",
     avatar: null,
   });
   const [errors, setErrors] = useState({});
-  const [avatarError, setAvatarError] = useState('');
+  const [avatarError, setAvatarError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserDetails} = useUserContext();
+  const { setUserDetails } = useUserContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,9 +45,9 @@ const Login = () => {
         ...prevData,
         avatar: file,
       }));
-      setAvatarError('');
+      setAvatarError("");
     } else {
-      setAvatarError('Please select a valid image file.');
+      setAvatarError("Please select a valid image file.");
     }
   };
 
@@ -99,22 +98,44 @@ const Login = () => {
     }
   };
 
-
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
 
+    const toastId = toast.loading("Signing Up...");
     setIsLoading(true);
-    try {
-      // Implement sign-up logic here
-      // Simulate successful sign-up
-      toast.success("Signed up successfully!");
-    } catch (error) {
-      toast.error("Sign-up failed. Please try again.");
-    }
-    setIsLoading(false);
-  };
 
+    const formData = new FormData();
+    formData.append("avatar", userData.avatar);
+    formData.append("name", userData.name);
+    formData.append("bio", userData.bio);
+    formData.append("username", userData.username);
+    formData.append("password", userData.password);
+
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/new`,
+        formData,
+        config
+      );
+      setUserDetails(data.user);
+      toast.success(data.message, {
+        id: toastId,
+      });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong", {
+        id: toastId,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <Container
       component="main"
@@ -216,7 +237,9 @@ const Login = () => {
                     height: "10rem",
                     objectFit: "contain",
                   }}
-                  src={userData.avatar ? URL.createObjectURL(userData.avatar) : ""}
+                  src={
+                    userData.avatar ? URL.createObjectURL(userData.avatar) : ""
+                  }
                 />
 
                 <IconButton
