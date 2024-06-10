@@ -20,6 +20,7 @@ import { Message } from "./models/message.js";
 import { corsOptions } from "./constants/config.js";
 import { socketAuthenticator } from "./middleware/auth.js";
 import cors from 'cors';
+import { v2 as cloudinary } from "cloudinary";
 
 import userRoute from "./routes/user.js";
 import chatRoute from "./routes/chat.js";
@@ -40,6 +41,12 @@ const onlineUsers = new Set();
 
 
 connectDB(mongoURI);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 
 const app = express();

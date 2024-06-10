@@ -1,6 +1,10 @@
 import { TryCatch } from "../middleware/error.js";
 import { Chat } from "../models/chat.js";
-import { emitEvent } from "../utils/features.js";
+import {
+  deletFilesFromCloudinary,
+  emitEvent,
+  uploadFilesToCloudinary,
+} from "../utils/features.js";
 import {
   ALERT,
   NEW_MESSAGE,
@@ -231,8 +235,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
     return next(new ErrorHandler("Please provide attachments", 400));
 
   //   Upload files here
-  // const attachments = await uploadFilesToCloudinary(files);
-  const attachments = [];
+  const attachments = await uploadFilesToCloudinary(files);
 
   const messageForDB = {
     content: "",
@@ -341,21 +344,20 @@ const deleteChat = TryCatch(async (req, res, next) => {
     );
   }
 
-  
   const messagesWithAttachments = await Message.find({
     chat: chatId,
     attachments: { $exists: true, $ne: [] },
   });
-  
+
   const public_ids = [];
-  
+
   messagesWithAttachments.forEach(({ attachments }) =>
     attachments.forEach(({ public_id }) => public_ids.push(public_id))
-);
+  );
 
-//   Here we have to dete All Messages as well as attachments or files from cloudinary
+  //   Here we have to dete All Messages as well as attachments or files from cloudinary
   await Promise.all([
-    // deletFilesFromCloudinary(public_ids),
+    deletFilesFromCloudinary(public_ids),
     chat.deleteOne(),
     Message.deleteMany({ chat: chatId }),
   ]);
@@ -367,7 +369,6 @@ const deleteChat = TryCatch(async (req, res, next) => {
     message: "Chat deleted successfully",
   });
 });
-
 
 const getMessages = TryCatch(async (req, res, next) => {
   const chatId = req.params.id;

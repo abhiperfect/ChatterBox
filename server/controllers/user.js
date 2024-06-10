@@ -1,7 +1,12 @@
 import { compare } from "bcrypt";
 import { TryCatch } from "../middleware/error.js";
 import { User } from "../models/user.js";
-import { sendToken, cookieOptions, emitEvent } from "../utils/features.js";
+import {
+  sendToken,
+  cookieOptions,
+  emitEvent,
+  uploadFilesToCloudinary,
+} from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
 import { Chat } from "../models/chat.js";
 import { Request } from "../models/request.js";
@@ -16,13 +21,8 @@ const newUser = TryCatch(async (req, res, next) => {
 
   if (!file) return next(new ErrorHandler("Please Upload Avatar"));
 
-  // const result = await uploadFilesToCloudinary([file]);
-  const result = [
-    {
-      public_id: "23456786786786",
-      url: "sxascsdvcdfvdfbfbb gff hb ",
-    },
-  ];
+  const result = await uploadFilesToCloudinary([file]);
+  
   const avatar = {
     public_id: result[0].public_id,
     url: result[0].url,
@@ -196,7 +196,6 @@ const getMyNotifications = TryCatch(async (req, res) => {
   });
 });
 
-
 const getMyFriends = TryCatch(async (req, res) => {
   const chatId = req.query.chatId;
 
@@ -243,5 +242,5 @@ export {
   sendFriendRequest,
   acceptFriendRequest,
   getMyNotifications,
-  getMyFriends
+  getMyFriends,
 };

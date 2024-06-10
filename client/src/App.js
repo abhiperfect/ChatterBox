@@ -10,6 +10,7 @@ import { CssBaseline } from "@mui/material";
 import { LayoutLoader } from "./components/layout/Loaders";
 import { Toaster } from "react-hot-toast";
 import ProtectRoute from "./components/auth/ProtectRoute.jsx";
+import {server} from "./constants/config.jsx";
 
 import Home from "./pages/Home.jsx";
 import Chat from "./pages/Chat.jsx";
@@ -17,14 +18,15 @@ import Login from "./pages/Login.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Groups from "./pages/Groups.jsx";
 
-let user = true;
+let user = false;
 
 function App() {
+  console.log(server);
   return (
     <>
       <UserProvider>
         <CssBaseline />
-        <div onContextMenu={(e) => e.preventDefault()}>
+        {/* <div onContextMenu={(e) => e.preventDefault()}> */}
           <BrowserRouter>
             <Suspense fallback={<LayoutLoader />}>
               <Routes>
@@ -36,7 +38,7 @@ function App() {
                   }
                 >
                   <Route path="/" element={<Home />} />
-                  <Route path="/chat/:chatId" element={<Chat />} />
+                  <Route path="/chat" element={<Chat />} />
                   <Route path="/groups" element={<Groups />} />
                 </Route>
                 <Route
@@ -55,7 +57,7 @@ function App() {
             </Suspense>
             <Toaster position="bottom-center" />
           </BrowserRouter>
-        </div>
+        {/* </div> */}
       </UserProvider>
     </>
   );
