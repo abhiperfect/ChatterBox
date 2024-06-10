@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React,{useEffect} from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -8,12 +8,32 @@ import { sampleUsers } from "../../constants/sampleData.js";
 import { useSenderContext } from "../../context/UserContext.js";
 import { useComponentContext } from "../../context/UserContext.js";
 import { useUserContext } from "../../context/UserContext.js";
+import { server } from "../../constants/config.jsx";
+import toast from "react-hot-toast";
 
+import axios from "axios";
 export default function UserList() {
   const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
   const {isRightContainerOpen, setIsRightContainerOpen} = useComponentContext();
   const {userConnections, setUserConnections} = useUserContext();
    const userId = 1;
+
+   useEffect(() => {
+    const fetchChatData = async () => {
+      try {
+        const response = await axios.get(`${server}/api/v1/chat/my`, {
+          withCredentials: true,
+        });
+        const { chats } = response.data;
+        setUserConnections(chats);
+      } catch (error) {
+        console.error('Error fetching chat data:', error);
+        toast.error('Error fetching chat data');
+      }
+    };
+    fetchChatData();
+  }, []);
+
   const handleClick = (user) => {
       setSelectedUserDetails(
         {
@@ -29,8 +49,8 @@ export default function UserList() {
 
   return (
     <List sx={{ width: "100%", bgcolor: userListBGColor , color: userListTextColor }}>
-      {userConnections.map((user) => {
-        if (user._id !== userId) {
+      {userConnections?.map((user) => {
+        if (user?._id !== userId) {
           return (
             <ListItem
               key={Math.random() * 100} // Use a unique key for each list item
@@ -38,7 +58,7 @@ export default function UserList() {
               onClick={() => handleClick(user)} // Pass user.userid to handleClick
               sx={{
                 boxShadow:
-                selectUserDetails.userid === user._id
+                selectUserDetails?.userid === user?._id
                     ? `0 0 10px ${userListOnSelectBoxShadow}`
                     : "none",
                 transition: "box-shadow 0.3s ease",
@@ -46,19 +66,19 @@ export default function UserList() {
             >
               <ListItemAvatar>
                 <Avatar
-                  alt={user.name}
-                  src={user.avatar} // Assuming you have profilepicture in user object
+                  alt={user?.name}
+                  src={user?.avatar} // Assuming you have profilepicture in user object
                   sx={{ width: 55, height: 55 }}
                 />
               </ListItemAvatar>
               <div className="chat-details">
                 <div className="text-head">
                   <h4>{user.name}</h4>
-                  <p className="time unread">{user.lastMessageTime}</p>
+                  <p className="time unread">{user?.lastMessageTime}</p>
                 </div>
                 <div className="text-message">
                   <p>{user.lastMessage}</p>
-                  {user.unreadMessages > 0 && <b>{user.unreadMessages}</b>}
+                  {user.unreadMessages > 0 && <b>{user?.unreadMessages}</b>}
                 </div>
               </div>
             </ListItem>

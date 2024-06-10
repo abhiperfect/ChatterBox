@@ -23,42 +23,7 @@ export const UserProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState();
 
   //THIS FOR FRIENDS LIST AND ADD FRIENDS IN NEW GROUP
-  const [userConnections, setUserConnections] = useState([
-    {
-      _id: "1",
-      name: "John Doe",
-      avatar: "https://www.w3schools.com/howto/img_avatar.png",
-      groupChat: false,
-      members: ["1", "2"],
-      lastMessage: "Did you complete the project?",
-      lastMessageTime: "1:20 PM",
-      unreadMessages: 0,
-      isOnline: false,
-    },
-
-    {
-      _id: "2",
-      name: "John Boi",
-      avatar: "https://www.w3schools.com/howto/img_avatar.png",
-      groupChat: true,
-      members: ["1", "2"],
-      lastMessage: "How about you? How's everything going on your end?",
-      lastMessageTime: "2:55 PM",
-      unreadMessages: 1,
-      isOnline: true,
-    },
-    {
-      _id: "3",
-      name: "Alice",
-      avatar: "https://www.w3schools.com/howto/img_avatar.png",
-      groupChat: false,
-      members: ["1", "2"],
-      lastMessage: "Did you complete the project?",
-      lastMessageTime: "1:20 PM",
-      unreadMessages: 0,
-      isOnline: true,
-    },
-  ]);
+  const [userConnections, setUserConnections] = useState([]);
 
   //THIS FOR SEARCHING NEW FRIENDS
   const [allUserList, setAllUserList] = useState();
