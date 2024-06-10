@@ -27,22 +27,19 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(`${server}/api/v1/user/me`, { withCredentials: true })
+      .get(`${server}/api/v1/user/me`, { withCredentials: true }) //withCredentials: true, pass cookies to server
       .then(({ data }) => {
-        setUserDetails(data.user);
+        //using this server check cookie
+        setUserDetails(data.user); //  and user remain logged in
         setLoader(false);
       })
       .catch((err) => {
-        setUserDetails([]);
-        setLoader(true);
+        setUserDetails();
       });
   }, [setUserDetails, setLoader]);
 
-  return loader ? (
-    <LayoutLoader />
-  ) : (
-    <>
- <Fragment>
+  return (
+    <Fragment>
       <CssBaseline />
       <BrowserRouter>
         <Suspense fallback={<LayoutLoader />}>
@@ -66,8 +63,6 @@ function App() {
         <Toaster position="bottom-center" />
       </BrowserRouter>
     </Fragment>
-      {/* </div> */}
-    </>
   );
 }
 
