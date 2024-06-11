@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,memo } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -100,4 +100,4 @@ const FriendRequestNotifications = ({
   );
 };
 
-export default FriendRequestNotifications;
+export default memo(FriendRequestNotifications);

@@ -16,9 +16,10 @@ export const UserProvider = ({ children }) => {
     profilePicture: "https://www.w3schools.com/howto/img_avatar.png",
     isOnline: false,
   });
-  
 
   //USER CONTEXT
+  const [chatId, setChatId] = useState();
+  const [members, setMembers] = useState();
 
   //DETAIL OF CURRENT USER LOGIN
   const [userDetails, setUserDetails] = useState();
@@ -38,123 +39,11 @@ export const UserProvider = ({ children }) => {
 
   //MESSAGE CONTEXT
 
-  const [messages, setMessages] = useState([
-    {
-      attachments: [],
-      content: "Piyush ka Message hai",
-      _id: "sfnsdjkfsdnfkjsbnd",
-      sender: {
-        _id: "2",
-        name: "Chaman ",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-
-    {
-      attachments: [
-        {
-          public_id: "asdsad 2",
-          url: "https://www.w3schools.com/howto/img_avatar.png",
-        },
-      ],
-      content: "",
-      _id: "1",
-      sender: {
-        _id: "1",
-        name: "Chaman  2",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-    {
-      attachments: [],
-      content: "Raman ka Message hai",
-      _id: "sfnsdjkfsdnfkjsbnd",
-      sender: {
-        _id: "1",
-        name: "Chaman ",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-
-    {
-      attachments: [
-        {
-          public_id: "asdsad 2",
-          url: "https://www.w3schools.com/howto/img_avatar.png",
-        },
-      ],
-      content: "",
-      _id: "1",
-      sender: {
-        _id: "2",
-        name: "Chaman  2",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-    {
-      attachments: [],
-      content: "Charan ka Message hai",
-      _id: "sfnsdjkfsdnfkjsbnd",
-      sender: {
-        _id: "2",
-        name: "Chaman ",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-
-    {
-      attachments: [
-        {
-          public_id: "asdsad 2",
-          url: "https://www.w3schools.com/howto/img_avatar.png",
-        },
-      ],
-      content: "",
-      _id: "1",
-      sender: {
-        _id: "1",
-        name: "Chaman  2",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-    {
-      attachments: [],
-      content: "Aman ka Message hai",
-      _id: "sfnsdjkfsdnfkjsbnd",
-      sender: {
-        _id: "1",
-        name: "Chaman ",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-
-    {
-      attachments: [
-        {
-          public_id: "asdsad 2",
-          url: "https://www.w3schools.com/howto/img_avatar.png",
-        },
-      ],
-      content: "",
-      _id: "1",
-      sender: {
-        _id: "2",
-        name: "Chaman  2",
-      },
-      chat: "chatId",
-      createdAt: "2024-02-12T10:41:30.630Z",
-    },
-  ]);
+  const [messages, setMessages] = useState();
 
   //NOTIFICATION CONTEXT
-  const [friendRequestNotifications, setFriendRequestNotifications] = useState();
+  const [friendRequestNotifications, setFriendRequestNotifications] =
+    useState();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -193,6 +82,10 @@ export const UserProvider = ({ children }) => {
         setAllUserList,
         searchQuery,
         setSearchQuery,
+        chatId,
+        setChatId,
+        members,
+        setMembers,
       }}
     >
       <SenderContext.Provider
@@ -212,7 +105,7 @@ export const UserProvider = ({ children }) => {
             <NotificationsContext.Provider
               value={{
                 friendRequestNotifications,
-                setFriendRequestNotifications
+                setFriendRequestNotifications,
               }}
             >
               {children}

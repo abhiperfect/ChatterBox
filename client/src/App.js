@@ -11,6 +11,7 @@ import { LayoutLoader } from "./components/layout/Loaders";
 import { Toaster } from "react-hot-toast";
 import ProtectRoute from "./components/auth/ProtectRoute.jsx";
 import { server } from "./constants/config.jsx";
+import { SocketProvider } from "./socket";
 
 import Home from "./pages/Home.jsx";
 import Chat from "./pages/Chat.jsx";
@@ -44,7 +45,13 @@ function App() {
       <BrowserRouter>
         <Suspense fallback={<LayoutLoader />}>
           <Routes>
-            <Route element={<ProtectRoute user={userDetails} />}>
+            <Route
+              element={
+                <SocketProvider>
+                  <ProtectRoute user={userDetails} />
+                </SocketProvider>
+              }
+            >
               <Route path="/" element={<Chat />} />
               <Route path="/home" element={<Home />} />
               <Route path="/groups" element={<Groups />} />

@@ -12,6 +12,18 @@ import {
   useUserContext,
   useSenderContext,
 } from "../../context/UserContext"; // Updated import
+import { useSocket } from "../../socket";
+import {
+  ALERT,
+  CHAT_JOINED,
+  CHAT_LEAVED,
+  NEW_MESSAGE,
+  START_TYPING,
+  STOP_TYPING,
+} from "../../constants/events.js";
+import { getMessages } from "../apis/api.js";
+
+
 
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
@@ -24,14 +36,25 @@ export default function MessageInput() {
   const [inputFocus, setInputFocus] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
-  const { setMessages } = useMessageContext();
-  const { userDetails } = useUserContext();
+  const { messages,setMessages } = useMessageContext();
+  const { userDetails, chatId, setChatId, members, setMembers } =
+    useUserContext();
   const { selectUserDetails } = useSenderContext();
 
   const theme = useTheme();
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
   const chatBoxRef = useRef(null);
+  const [message, setMessage] = useState("");
+  const [IamTyping, setIamTyping] = useState(false);
+  const [userTyping, setUserTyping] = useState(false);
+  const [page, setPage ] = useState(1);
+  const typingTimeout = useRef(null);
+  const socket = useSocket();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
 
   useEffect(() => {
     // Activate send button if there's input or emojis
@@ -44,8 +67,48 @@ export default function MessageInput() {
     return message.trim() !== "";
   };
 
+
+
+
+  
+
+
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        setLoading(true);
+        const data = await getMessages(chatId, page);
+        setMessages(data?.messages);
+        // setMessages((prevMessages) => [...prevMessages, ...data.messages]);
+        setPage(data?.totalPages);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMessages();
+  }, [chatId, page,setMessages]);
+
+
+
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
+    setMessage(event.target.value);
+    if (!IamTyping) {
+      socket.emit(START_TYPING, { members, chatId });
+      setIamTyping(true);
+    }
+
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+
+    typingTimeout.current = setTimeout(() => {
+      socket.emit(STOP_TYPING, { members, chatId });
+      setIamTyping(false);
+    }, [2000]);
   };
 
   const handleSendMessage = (event) => {
@@ -54,28 +117,53 @@ export default function MessageInput() {
 
     if (isValidMessage(inputValue) || chosenEmojis.length > 0) {
       const messageContent = inputValue + chosenEmojis.join("");
-      console.log("Sending message:", messageContent);
+      setMessage(messageContent);
+      if( !message ) return;
+      console.log("Sendig msg: ",message);
+      socket.emit(NEW_MESSAGE, { chatId, members, message });
+
+      setMessage("");
       setInputValue("");
       setChosenEmojis([]);
-
-      // Add the new message to the messages state
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          attachments: [],
-          content: messageContent,
-          _id: selectUserDetails.userid,
-          sender: {
-            _id: userDetails?._id,
-            name: userDetails?.username,
-          },
-          chat: "chatId",
-          createdAt: new Date().toISOString(),
-        },
-      ]);
+      // setMessages((prevMessages) => [
+      //   ...prevMessages,
+      //   {
+      //     attachments: [],
+      //     content: messageContent,
+      //     _id: selectUserDetails.userid,
+      //     sender: {
+      //       _id: userDetails?._id,
+      //       name: userDetails?.username,
+      //     },
+      //     chat: "chatId",
+      //     createdAt: new Date().toISOString(),
+      //   },
+      // ]);
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleSendMessage(event);

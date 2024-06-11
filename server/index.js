@@ -94,7 +94,9 @@ io.on("connection", (socket) => {
       chat: chatId,
       createdAt: new Date().toISOString(),
     };
-
+    console.log("Emitting: ",messageForRealTime);
+    console.log("Members: ", members);
+    console.log("chatId: ", chatId);
     const messageForDB = {
       content: message,
       sender: user._id,

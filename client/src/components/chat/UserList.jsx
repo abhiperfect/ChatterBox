@@ -17,6 +17,7 @@ export default function UserList() {
   const {isRightContainerOpen, setIsRightContainerOpen} = useComponentContext();
   const {userConnections, setUserConnections} = useUserContext();
    const userId = 1;
+   const {  chatId, setChatId  } = useUserContext();
 
    useEffect(() => {
     const fetchChatData = async () => {
@@ -25,6 +26,8 @@ export default function UserList() {
           withCredentials: true,
         });
         const { chats } = response.data;
+        const { _id } = chats[0];
+        setChatId(_id)
         setUserConnections(chats);
       } catch (error) {
         console.error('Error fetching chat data:', error);
