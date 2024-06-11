@@ -6,11 +6,12 @@ import { fileFormat } from "../../lib/features";
 import RenderAttachment from "./RenderAttachment";
 import { motion } from "framer-motion";
 import { myMessageContainer } from "../../constants/color";
-const MessageComponent = ({ message, user }) => {
+
+
+const MessageComponent = ({ message, user,senderId }) => {
   const { sender, content, attachments = [], createdAt } = message;
 
-  // Determine if the message is from the same sender as the current user
-  const sameSender = sender._id === user?._id;
+  const sameSender = senderId !== user?._id;
   const timeAgo = moment(createdAt).fromNow();
 
   return (

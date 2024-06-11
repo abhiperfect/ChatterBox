@@ -141,7 +141,7 @@ function HeaderOfSender({
             <Tooltip title="Open settings" style={{ display: "flex" }}>
               <ChatOption />
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <MyAvatar userDetails={selectUserDetails} />
+                <MyAvatar senderDetails={selectUserDetails} />
               </IconButton>
             </Tooltip>
             <Menu

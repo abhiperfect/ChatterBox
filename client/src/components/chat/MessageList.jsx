@@ -5,16 +5,20 @@ import { useUserContext } from "../../context/UserContext.js";
 import { useSocket } from "../../socket.jsx";
 import axios from "axios";
 import { server } from "../../constants/config.jsx";
+import { useSenderContext } from "../../context/UserContext.js";
 
 export default function MessageList() {
   const chatContainerRef = useRef(null);
-  const { messages, setMessages } = useMessageContext();
+  const { messages, setMessages, newMessages, setNewMessages } =
+    useMessageContext();
   const { userDetails, setMembers } = useUserContext();
   const socket = useSocket();
   const [chat, setChat] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { chatId, setChatId } = useUserContext();
+
+  const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
 
   const getChatDetails = async (chatId, populate = false) => {
     try {
@@ -66,7 +70,20 @@ export default function MessageList() {
   return (
     <div className="chat-container" ref={chatContainerRef}>
       {messages?.map((i) => (
-        <MessageComponent key={i?._id} message={i} user={userDetails} />
+        <MessageComponent
+          key={i?._id}
+          message={i}
+          senderId={selectUserDetails?.userid}
+          user={userDetails}
+        />
+      ))}
+      {newMessages?.map((i) => (
+        <MessageComponent
+          key={i?._id}
+          message={i}
+          senderId={selectUserDetails?.userid}
+          user={userDetails}
+        />
       ))}
     </div>
   );

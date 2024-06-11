@@ -7,11 +7,11 @@ import {
   statusOfflineColor,
 } from "../../../constants/color";
 
-export default function MyAvatar({ backgroundColor, userDetails }) {
+export default function MyAvatar({ backgroundColor, senderDetails }) {
   // Handle case where userDetails might be undefined
 
-  const username = userDetails?.username || "Unknown User";
-  const profilePicture = userDetails?.profilepicture || "https://www.w3schools.com/howto/img_avatar.png";
+  const username = senderDetails?.username || "Unknown User";
+  const profilePicture = senderDetails?.profilepicture || "https://www.w3schools.com/howto/img_avatar.png";
   
   const isOnline = true;
   const isGroup = false;

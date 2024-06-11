@@ -10,12 +10,7 @@ const NotificationsContext = createContext();
 
 export const UserProvider = ({ children }) => {
   //SENDER CONTEXT
-  const [selectUserDetails, setSelectedUserDetails] = useState({
-    userId: 1000,
-    username: "NO-User",
-    profilePicture: "https://www.w3schools.com/howto/img_avatar.png",
-    isOnline: false,
-  });
+  const [selectUserDetails, setSelectedUserDetails] = useState();
 
   //USER CONTEXT
   const [chatId, setChatId] = useState();
@@ -39,7 +34,10 @@ export const UserProvider = ({ children }) => {
 
   //MESSAGE CONTEXT
 
-  const [messages, setMessages] = useState();
+  const [messages, setMessages] = useState([]);
+  const [newMessages, setNewMessages] = useState([]);
+
+
 
   //NOTIFICATION CONTEXT
   const [friendRequestNotifications, setFriendRequestNotifications] =
@@ -101,7 +99,7 @@ export const UserProvider = ({ children }) => {
             setLoader,
           }}
         >
-          <MessageContext.Provider value={{ messages, setMessages }}>
+          <MessageContext.Provider value={{ messages, setMessages,newMessages, setNewMessages }}>
             <NotificationsContext.Provider
               value={{
                 friendRequestNotifications,

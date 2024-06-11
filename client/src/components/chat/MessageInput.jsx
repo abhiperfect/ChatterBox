@@ -23,8 +23,6 @@ import {
 } from "../../constants/events.js";
 import { getMessages } from "../apis/api.js";
 
-
-
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
 
@@ -36,25 +34,21 @@ export default function MessageInput() {
   const [inputFocus, setInputFocus] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
-  const { messages,setMessages } = useMessageContext();
-  const { userDetails, chatId, setChatId, members, setMembers } =
-    useUserContext();
+  const { setMessages } = useMessageContext();
+  const { userDetails, chatId, members } = useUserContext();
   const { selectUserDetails } = useSenderContext();
 
   const theme = useTheme();
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
   const chatBoxRef = useRef(null);
-  const [message, setMessage] = useState("");
   const [IamTyping, setIamTyping] = useState(false);
   const [userTyping, setUserTyping] = useState(false);
-  const [page, setPage ] = useState(1);
+  const [page, setPage] = useState(1);
   const typingTimeout = useRef(null);
   const socket = useSocket();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-
 
   useEffect(() => {
     // Activate send button if there's input or emojis
@@ -67,19 +61,11 @@ export default function MessageInput() {
     return message.trim() !== "";
   };
 
-
-
-
-  
-
-
-
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         setLoading(true);
         const data = await getMessages(chatId, page);
-        setMessages(data?.messages);
         setMessages((prevMessages) => [...prevMessages, ...data.messages]);
         setPage(data?.totalPages);
       } catch (err) {
@@ -90,14 +76,21 @@ export default function MessageInput() {
     };
 
     fetchMessages();
-  }, [chatId, page,setMessages]);
+  }, [chatId, page, setMessages]);
 
+  useEffect(() => {
+    // Listen for new messages from the socket
+    socket.on(NEW_MESSAGE, (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
 
-
+    return () => {
+      socket.off(NEW_MESSAGE);
+    };
+  }, [socket, setMessages]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
-    setMessage(event.target.value);
     if (!IamTyping) {
       socket.emit(START_TYPING, { members, chatId });
       setIamTyping(true);
@@ -108,51 +101,38 @@ export default function MessageInput() {
     typingTimeout.current = setTimeout(() => {
       socket.emit(STOP_TYPING, { members, chatId });
       setIamTyping(false);
-    }, [2000]);
+    }, 2000);
   };
 
   const handleSendMessage = (event) => {
     if (event && event.key && event.key !== "Enter" && event.type !== "click")
-      return;
+        return;
 
     if (isValidMessage(inputValue) || chosenEmojis.length > 0) {
-      const messageContent = inputValue + chosenEmojis.join("");
-      setMessage(messageContent);
-      if( !message ) return;
-      console.log("Sendig msg: ",message);
-      socket.emit(NEW_MESSAGE, { chatId, members, message });
+        const message = inputValue + chosenEmojis.join("");
+        if (!message) return;
 
-      setMessage("");
-      setInputValue("");
-      setChosenEmojis([]);
-      setMessages((prevMessages) => [
-        ...prevMessages,messages
-      ]);
+        console.log("Sending message:", message);
+        
+        socket.emit(NEW_MESSAGE, { chatId, members, message });
+
+        setInputValue("");
+        setChosenEmojis([]);
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+                content: message,
+                sender: {
+                    _id: userDetails?._id,
+                    name: userDetails?.username,
+                },
+                chat: chatId,
+                createdAt: new Date().toISOString(),
+            },
+        ]);
     }
-  };
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleSendMessage(event);
@@ -229,7 +209,7 @@ export default function MessageInput() {
       <input
         type="text"
         placeholder="Type your message..."
-        value={inputValue + chosenEmojis.join("")}
+        value={inputValue}
         onChange={handleInputChange}
         onKeyPress={handleKeyPress} // Use onKeyPress instead of onKeyUp
         onFocus={() => setInputFocus(true)}
