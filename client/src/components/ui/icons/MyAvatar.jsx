@@ -11,7 +11,7 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
   // Handle case where userDetails might be undefined
 
   const username = userDetails?.username || "Unknown User";
-  const profilePicture = userDetails?.avatar?.url || "https://www.w3schools.com/howto/img_avatar.png";
+  const profilePicture = userDetails?.profilepicture || "https://www.w3schools.com/howto/img_avatar.png";
   
   const isOnline = true;
   const isGroup = false;

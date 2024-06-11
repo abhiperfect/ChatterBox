@@ -8,7 +8,7 @@ const getMessages = async (chatId, page ) => {
       params: { page },
       withCredentials: "true",
     });
-    console.log("get msg rs: ", response);
+    console.log("get msg rs: ", response.message);
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data.message : error.message);

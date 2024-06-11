@@ -80,7 +80,7 @@ export default function MessageInput() {
         setLoading(true);
         const data = await getMessages(chatId, page);
         setMessages(data?.messages);
-        // setMessages((prevMessages) => [...prevMessages, ...data.messages]);
+        setMessages((prevMessages) => [...prevMessages, ...data.messages]);
         setPage(data?.totalPages);
       } catch (err) {
         setError(err.message);
@@ -125,20 +125,9 @@ export default function MessageInput() {
       setMessage("");
       setInputValue("");
       setChosenEmojis([]);
-      // setMessages((prevMessages) => [
-      //   ...prevMessages,
-      //   {
-      //     attachments: [],
-      //     content: messageContent,
-      //     _id: selectUserDetails.userid,
-      //     sender: {
-      //       _id: userDetails?._id,
-      //       name: userDetails?.username,
-      //     },
-      //     chat: "chatId",
-      //     createdAt: new Date().toISOString(),
-      //   },
-      // ]);
+      setMessages((prevMessages) => [
+        ...prevMessages,messages
+      ]);
     }
   };
 

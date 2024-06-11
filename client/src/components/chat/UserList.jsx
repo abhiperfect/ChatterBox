@@ -26,8 +26,6 @@ export default function UserList() {
           withCredentials: true,
         });
         const { chats } = response.data;
-        const { _id } = chats[0];
-        setChatId(_id)
         setUserConnections(chats);
       } catch (error) {
         console.error('Error fetching chat data:', error);
@@ -38,11 +36,13 @@ export default function UserList() {
   }, []);
 
   const handleClick = (user) => {
+      setChatId(user._id);
+      console.log("chat id: ",user._id);
       setSelectedUserDetails(
         {
           userid: user._id,
           username: user.name,
-          profilepicture: "https://www.w3schools.com/howto/img_avatar.png",
+          profilepicture: user?.avatar,
           isOnline: user.isOnline,
           groupChat:user.groupChat,
         }
