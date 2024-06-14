@@ -7,12 +7,18 @@ import { IconButton } from "@mui/material";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import useTheme from "@mui/system/useTheme";
-import { useMessageContext, useUserContext } from "../../context/UserContext";
+import {
+  useMessageContext,
+  useUserContext,
+  useSenderContext,
+} from "../../context/UserContext";
 import { useSocket } from "../../socket";
 import {
   NEW_MESSAGE,
+  NEW_MESSAGE_ALERT,
   START_TYPING,
   STOP_TYPING,
+  ONLINE_USERS,
 } from "../../constants/events.js";
 import { getMessages } from "../apis/api.js";
 import FileMenu from "../ui/dialogs/FileMenu.jsx";
@@ -26,9 +32,11 @@ export default function MessageInput() {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+  const [typingStatus, setTypingStatus] = useState({});
 
   const { setMessages } = useMessageContext();
   const { userDetails, chatId, members } = useUserContext();
+  const { friendDetails, setFriendDetails } = useSenderContext();
 
   const theme = useTheme();
   const emojiPickerRef = useRef(null);
@@ -40,6 +48,7 @@ export default function MessageInput() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+
   useEffect(() => {
     return () => {
       setMessages([]);
@@ -76,14 +85,64 @@ export default function MessageInput() {
   }, [chatId, page, setMessages]);
 
   useEffect(() => {
-    socket.on(NEW_MESSAGE, (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
+    if (!socket) return;
+
+    const handleNewMessage = ({ chatId, message }) => {
+      console.log("chat id: ", chatId);
+      console.log("new msg: ", message.content);
+      console.log("frnd details: ", friendDetails?._id);
+      if (friendDetails?._id === chatId) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            content: message.content,
+            sender: message.sender,
+            chat: chatId,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+      }
+      // setMessages((prevMessages) => [...prevMessages, message]);
+    };
+
+    const handleNewMessageAlert = ({ chatId }) => {
+      const audio = new Audio(receiveSoundPath);
+      audio.play();
+    };
+
+    const handleTyping = ({ chatId, userId, typing }) => {
+      setTypingStatus((prevStatus) => ({
+        ...prevStatus,
+        [userId]: typing,
+      }));
+    };
+
+    const handleOnlineUsers = (onlineUsers) => {
+      // Handle online users update
+    };
+
+    socket.on(NEW_MESSAGE, handleNewMessage);
+    socket.on(NEW_MESSAGE_ALERT, handleNewMessageAlert);
+    socket.on(START_TYPING, ({ chatId, userId }) =>
+      handleTyping({ chatId, userId, typing: true })
+    );
+    socket.on(STOP_TYPING, ({ chatId, userId }) =>
+      handleTyping({ chatId, userId, typing: false })
+    );
+    socket.on(ONLINE_USERS, handleOnlineUsers);
 
     return () => {
-      socket.off(NEW_MESSAGE);
+      socket.off(NEW_MESSAGE, handleNewMessage);
+      socket.off(NEW_MESSAGE_ALERT, handleNewMessageAlert);
+      socket.off(START_TYPING, ({ chatId, userId }) =>
+        handleTyping({ chatId, userId, typing: true })
+      );
+      socket.off(STOP_TYPING, ({ chatId, userId }) =>
+        handleTyping({ chatId, userId, typing: false })
+      );
+      socket.off(ONLINE_USERS, handleOnlineUsers);
     };
-  }, [socket, setMessages]);
+  }, [friendDetails, socket, setMessages]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
