@@ -7,12 +7,19 @@ import {
   statusOfflineColor,
 } from "../../../constants/color";
 
-export default function MyAvatar({ backgroundColor, userDetails }) {
-  const { _id, avatar, name, bio, username } = userDetails;
-  const myName = name == null ? "User" : name;
+export default function FriendAvatar({ backgroundColor, friendDetails }) {
+  // Handle case where userDetails might be undefined
+  console.log();
 
-  const isOnline = true;
-  const isGroup = false;
+  const { _id, groupChat, avatar, name } = friendDetails || {};
+  const friendProfile =
+    avatar && avatar.length > 0
+      ? avatar[0]
+      : "https://www.w3schools.com/howto/img_avatar.png";
+  const friendName = name == null ? "User" : name;
+
+  const isOnline = true; //yet to be created
+  const isGroup = groupChat;
   return (
     <Chip
       key={_id}
@@ -25,8 +32,8 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
       }}
       avatar={
         <Avatar
-          alt={myName}
-          src={avatar?.url}
+          alt={friendName}
+          src={friendProfile}
           sx={{ width: "40px", height: "40px" }}
         />
       }
@@ -46,7 +53,7 @@ export default function MyAvatar({ backgroundColor, userDetails }) {
               fontSize: "18px",
             }}
           >
-            {myName}
+            {friendName}
           </Typography>
           {isGroup ? (
             <Typography

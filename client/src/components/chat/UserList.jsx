@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 import axios from "axios";
 export default function UserList() {
-  const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
+  const { friendDetails, setFriendDetails } = useSenderContext();
   const {isRightContainerOpen, setIsRightContainerOpen} = useComponentContext();
   const {userConnections, setUserConnections} = useUserContext();
    const userId = 1;
@@ -38,15 +38,7 @@ export default function UserList() {
   const handleClick = (user) => {
       setChatId(user._id);
       console.log("chat id: ",user._id);
-      setSelectedUserDetails(
-        {
-          userid: user._id,
-          username: user.name,
-          profilepicture: user?.avatar,
-          isOnline: user.isOnline,
-          groupChat:user.groupChat,
-        }
-      );
+      setFriendDetails(user);
       setIsRightContainerOpen(true);
   };
 
@@ -61,7 +53,7 @@ export default function UserList() {
               onClick={() => handleClick(user)} // Pass user.userid to handleClick
               sx={{
                 boxShadow:
-                selectUserDetails?.userid === user?._id
+                friendDetails?.userid === user?._id
                     ? `0 0 10px ${userListOnSelectBoxShadow}`
                     : "none",
                 transition: "box-shadow 0.3s ease",

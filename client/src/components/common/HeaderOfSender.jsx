@@ -20,6 +20,7 @@ import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import VideoCallButton from "../ui/buttons/VideoCallButton.jsx";
 import CallButton from "../ui/buttons/CallButton.jsx";
 import { useSenderContext } from "../../context/UserContext.js";
+import FriendAvatar from "../ui/icons/FriendAvatar.jsx";
 
 const pages = [];
 
@@ -63,7 +64,7 @@ function HeaderOfSender({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const { selectUserDetails } = useSenderContext();
+  const { friendDetails } = useSenderContext();
 
   return (
     <AppBar
@@ -141,7 +142,7 @@ function HeaderOfSender({
             <Tooltip title="Open settings" style={{ display: "flex" }}>
               <ChatOption />
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <MyAvatar senderDetails={selectUserDetails} />
+                <FriendAvatar friendDetails={friendDetails} />
               </IconButton>
             </Tooltip>
             <Menu

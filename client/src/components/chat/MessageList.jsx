@@ -18,7 +18,7 @@ export default function MessageList() {
   const [error, setError] = useState(null);
   const { chatId, setChatId } = useUserContext();
 
-  const { selectUserDetails, setSelectedUserDetails } = useSenderContext();
+  const { friendDetails, setFriendDetails } = useSenderContext();
 
   const getChatDetails = async (chatId, populate = false) => {
     try {
@@ -73,7 +73,7 @@ export default function MessageList() {
         <MessageComponent
           key={i?._id}
           message={i}
-          senderId={selectUserDetails?.userid}
+          senderId={friendDetails?.userid}
           user={userDetails}
         />
       ))}
@@ -81,7 +81,7 @@ export default function MessageList() {
         <MessageComponent
           key={i?._id}
           message={i}
-          senderId={selectUserDetails?.userid}
+          senderId={friendDetails?.userid}
           user={userDetails}
         />
       ))}

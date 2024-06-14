@@ -10,7 +10,7 @@ const NotificationsContext = createContext();
 
 export const UserProvider = ({ children }) => {
   //SENDER CONTEXT
-  const [selectUserDetails, setSelectedUserDetails] = useState();
+  const [friendDetails, setFriendDetails] = useState();
 
   //USER CONTEXT
   const [chatId, setChatId] = useState();
@@ -87,7 +87,7 @@ export const UserProvider = ({ children }) => {
       }}
     >
       <SenderContext.Provider
-        value={{ selectUserDetails, setSelectedUserDetails }}
+        value={{ friendDetails, setFriendDetails }}
       >
         <ComponentContext.Provider
           value={{

@@ -25,6 +25,8 @@ import StatusIcon from "../ui/icons/Status.jsx";
 import SettingIcon from "../ui/icons/Setting.jsx";
 import NewGroupIcon from "../ui/icons/NewGroup.jsx";
 import Logout from "../ui/icons/Logout.jsx";
+import FriendAvatar from "../ui/icons/FriendAvatar.jsx";
+import { useSenderContext } from "../../context/UserContext.js";
 
 const pages = [<NotificationsIcon />, <NewGroupIcon />, <Logout />];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
