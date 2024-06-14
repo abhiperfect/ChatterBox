@@ -134,11 +134,6 @@ export default function MessageInput() {
     }
   };
 
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setFileMenuAnchor(e.currentTarget);
-    console.log("Selected file:", file);
-  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -173,7 +168,7 @@ export default function MessageInput() {
       setMessages((prevMessages) => [
         ...prevMessages,
         {
-          attachments: uploadedFiles,
+          attachments: [file],
           sender: {
             _id: userDetails?._id,
             name: userDetails?.username,
