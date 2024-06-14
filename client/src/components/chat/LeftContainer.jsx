@@ -3,12 +3,9 @@ import SimpleContainer from "../common/SimpleContainer";
 import UserList from "./UserList";
 import SearchBar from "../common/SearchBar";
 import { backgroundColor } from "../../constants/color";
-import { Typography } from "@mui/material";
-import { useComponentContext } from "../../context/UserContext";
 import { Box } from "@mui/material";
 import UserItem from "../common/UserItem";
-import { sampleUsers } from "../../constants/sampleData";
-import { useUserContext } from "../../context/UserContext";
+import { useComponentContext, useUserContext } from "../../context/UserContext";
 import axios from "axios";
 import { server } from "../../constants/config";
 import toast from "react-hot-toast";
@@ -38,31 +35,29 @@ export default function LeftContainer() {
   };
 
   return (
-    <>
-      <div style={{ paddingLeft: "0px", paddingRight: "0px" }}>
-        <SearchBar borderTopLeftRadius="20px" />
-        <SimpleContainer
-          backgroundColor={backgroundColor}
-          height="73vh"
-          cursor="pointer"
-        >
-          {!isSearchBarOpen && <UserList />}
-          {isSearchBarOpen && (
-            <Box>
+    <div style={{ paddingLeft: "0px", paddingRight: "0px" }}>
+      <SearchBar borderTopLeftRadius="20px" />
+      <SimpleContainer
+        backgroundColor={backgroundColor}
+        height="73vh"
+        cursor="pointer"
+      >
+        {!isSearchBarOpen && <UserList />}
+        {isSearchBarOpen && (
+          <Box>
             {allUserList
               ?.filter(user => user?._id !== userDetails?._id)
-              ?.map(user => (
+              .map(user => (
                 <UserItem
-                  user={user}
                   key={user?._id}
+                  user={user}
                   handler={() => addFriendHandler(user?._id, user?.name)}
                   handlerIsLoading={isLoadingSendFriendRequest}
                 />
               ))}
           </Box>
-          )}
-        </SimpleContainer>
-      </div>
-    </>
+        )}
+      </SimpleContainer>
+    </div>
   );
 }

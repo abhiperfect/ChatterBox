@@ -70,9 +70,9 @@ export default function MessageList() {
 
   return (
     <div className="chat-container" ref={chatContainerRef}>
-      {sortedMessages.map((i) => (
+      {sortedMessages.map((i,index) => (
         <MessageComponent
-          key={i?._id}
+          key={index}
           message={i}
           friendDetails={friendDetails}
           userDetails={userDetails}

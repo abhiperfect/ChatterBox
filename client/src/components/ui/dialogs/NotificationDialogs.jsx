@@ -112,7 +112,7 @@ export default function NotificationsDialog({ children }) {
             {friendRequestNotifications &&
               friendRequestNotifications?.map((notification, index) => (
                 <FriendRequestNotification
-                  key={notification?._id}
+                  key={index}
                   requestId={notification?._id}
                   avatarSrc={notification?.sender?.avatar}
                   name={notification?.sender?.name}

@@ -9,7 +9,7 @@ import { myMessageContainer } from "../../constants/color";
 
 const MessageComponent = ({ message, friendDetails, userDetails }) => {
   const { sender, content, attachments = [], createdAt } = message;
-  const sameSender = userDetails?._id === sender._id;
+  const sameSender = userDetails?._id === sender?._id;
   const timeAgo = moment(createdAt).fromNow();
 
   return (
@@ -28,7 +28,7 @@ const MessageComponent = ({ message, friendDetails, userDetails }) => {
     >
       {!sameSender && (
         <Typography color={lightBlue} fontWeight={"600"} variant="caption">
-          {sender.name}
+          {sender?.name}
         </Typography>
       )}
 
@@ -36,7 +36,7 @@ const MessageComponent = ({ message, friendDetails, userDetails }) => {
 
       {attachments.length > 0 &&
         attachments.map((attachment, index) => {
-          const url = attachment.url;
+          const url = attachment?.url;
           const file = fileFormat(url);
 
           return (

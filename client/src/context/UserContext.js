@@ -7,6 +7,7 @@ const SenderContext = createContext();
 const ComponentContext = createContext();
 const MessageContext = createContext();
 const NotificationsContext = createContext();
+const FileMenuContext = createContext();
 
 export const UserProvider = ({ children }) => {
   //SENDER CONTEXT
@@ -37,13 +38,15 @@ export const UserProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [newMessages, setNewMessages] = useState([]);
 
-
-
   //NOTIFICATION CONTEXT
   const [friendRequestNotifications, setFriendRequestNotifications] =
     useState();
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  //FILE MENU CONTEXT
+  const [isFileMenuOpen, setIsFileMenuOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const timeOutId = setTimeout(() => {
@@ -86,9 +89,7 @@ export const UserProvider = ({ children }) => {
         setMembers,
       }}
     >
-      <SenderContext.Provider
-        value={{ friendDetails, setFriendDetails }}
-      >
+      <SenderContext.Provider value={{ friendDetails, setFriendDetails }}>
         <ComponentContext.Provider
           value={{
             isRightContainerOpen,
@@ -99,14 +100,25 @@ export const UserProvider = ({ children }) => {
             setLoader,
           }}
         >
-          <MessageContext.Provider value={{ messages, setMessages,newMessages, setNewMessages }}>
+          <MessageContext.Provider
+            value={{ messages, setMessages, newMessages, setNewMessages }}
+          >
             <NotificationsContext.Provider
               value={{
                 friendRequestNotifications,
                 setFriendRequestNotifications,
               }}
             >
-              {children}
+              <FileMenuContext.Provider
+                value={{
+                  isFileMenuOpen,
+                  setIsFileMenuOpen,
+                  isUploading,
+                  setIsUploading,
+                }}
+              >
+                {children}
+              </FileMenuContext.Provider>
             </NotificationsContext.Provider>
           </MessageContext.Provider>
         </ComponentContext.Provider>
@@ -120,3 +132,4 @@ export const useSenderContext = () => useContext(SenderContext);
 export const useComponentContext = () => useContext(ComponentContext);
 export const useMessageContext = () => useContext(MessageContext);
 export const useNotificationsContext = () => useContext(NotificationsContext);
+export const useFileMenuContext = () => useContext(FileMenuContext);

@@ -18,7 +18,6 @@ export default function UserList() {
   const {userConnections, setUserConnections} = useUserContext();
    const userId = 1;
    const {  chatId, setChatId  } = useUserContext();
-
    useEffect(() => {
     const fetchChatData = async () => {
       try {
@@ -37,23 +36,22 @@ export default function UserList() {
 
   const handleClick = (user) => {
       setChatId(user._id);
-      console.log("chat id: ",user._id);
       setFriendDetails(user);
       setIsRightContainerOpen(true);
   };
 
   return (
     <List sx={{ width: "100%", bgcolor: userListBGColor , color: userListTextColor }}>
-      {userConnections?.map((user) => {
+      {userConnections?.map((user,index) => {
         if (user?._id !== userId) {
           return (
             <ListItem
-              key={Math.random() * 100} // Use a unique key for each list item
+              key={index}
               alignItems="flex-start"
               onClick={() => handleClick(user)} // Pass user.userid to handleClick
               sx={{
                 boxShadow:
-                friendDetails?.userid === user?._id
+                chatId === user?._id
                     ? `0 0 10px ${userListOnSelectBoxShadow}`
                     : "none",
                 transition: "box-shadow 0.3s ease",

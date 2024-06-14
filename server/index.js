@@ -54,7 +54,7 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: corsOptions,
 });
-
+app.set('io', io);
 //%%MIDDLEWARE START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 app.use(express.json());
 app.use(cookieParser());

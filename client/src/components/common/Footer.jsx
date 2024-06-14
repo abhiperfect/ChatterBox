@@ -107,9 +107,9 @@ function Footer({
                 mt: "-85px",
               }}
             >
-              {pages.map((page) => (
+              {pages.map((page,index) => (
                 <MenuItem
-                  key={page}
+                  key={index}
                   onClick={handleCloseNavMenu}
                   style={{ backgroundColor: footerBGColor }}
                 >
@@ -120,9 +120,9 @@ function Footer({
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <Button
-                key={page}
+                key={index}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: footerButtonTextColor, display: "block" }}
               >
@@ -156,8 +156,8 @@ function Footer({
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting,index) => (
+                <MenuItem key={index} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

@@ -71,10 +71,10 @@ export default function NewGroupDialog({ children }) {
         <DialogContent dividers>
           <Input  placeholder="Group Name" />
           <Box>
-            {userConnections.map((user) => (
+            {userConnections.map((user,index) => (
               <UserItem
                 user={user}
-                key={user._id}
+                key={index}
                 handler={() => addFriendHandler(user._id)}
                 handlerIsLoading={isLoadingSendFriendRequest}
               />
