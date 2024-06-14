@@ -9,8 +9,6 @@ import { myMessageContainer } from "../../constants/color";
 
 const MessageComponent = ({ message, friendDetails, userDetails }) => {
   const { sender, content, attachments = [], createdAt } = message;
-  console.log("friendDetails: ", friendDetails?._id);
-  console.log("userDetails: ", userDetails?._id);
   const sameSender = userDetails?._id === sender._id;
   const timeAgo = moment(createdAt).fromNow();
 

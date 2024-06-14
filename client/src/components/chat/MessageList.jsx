@@ -9,15 +9,13 @@ import { useSenderContext } from "../../context/UserContext.js";
 
 export default function MessageList() {
   const chatContainerRef = useRef(null);
-  const { messages, setMessages, newMessages, setNewMessages } =
-    useMessageContext();
+  const { messages, setMessages, newMessages, setNewMessages } = useMessageContext();
   const { userDetails, setMembers } = useUserContext();
   const socket = useSocket();
   const [chat, setChat] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { chatId, setChatId } = useUserContext();
-
   const { friendDetails, setFriendDetails } = useSenderContext();
 
   const getChatDetails = async (chatId, populate = false) => {
@@ -36,6 +34,7 @@ export default function MessageList() {
       );
     }
   };
+
   useEffect(() => {
     const fetchChatDetails = async () => {
       try {
@@ -54,30 +53,24 @@ export default function MessageList() {
   useEffect(() => {
     // Scroll to the bottom of the chat container when messages change
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, newMessages]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
     // Adjust the delay time as needed
   }, []);
 
+  const sortedMessages = [...(messages || []), ...(newMessages || [])].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
+
   return (
     <div className="chat-container" ref={chatContainerRef}>
-      {messages?.map((i) => (
-        <MessageComponent
-          key={i?._id}
-          message={i}
-          friendDetails={friendDetails}
-          userDetails={userDetails}
-        />
-      ))}
-      {newMessages?.map((i) => (
+      {sortedMessages.map((i) => (
         <MessageComponent
           key={i?._id}
           message={i}
