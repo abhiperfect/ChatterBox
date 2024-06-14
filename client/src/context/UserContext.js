@@ -33,6 +33,8 @@ export const UserProvider = ({ children }) => {
 
   const [loader, setLoader] = useState(true);
 
+  const [chatLoader, setChatLoader] = useState(true);
+
   //MESSAGE CONTEXT
 
   const [messages, setMessages] = useState([]);
@@ -98,6 +100,8 @@ export const UserProvider = ({ children }) => {
             setSearchBarOpen,
             loader,
             setLoader,
+            chatLoader,
+            setChatLoader,
           }}
         >
           <MessageContext.Provider
