@@ -7,21 +7,15 @@ import { IconButton } from "@mui/material";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import useTheme from "@mui/system/useTheme";
-import {
-  useMessageContext,
-  useUserContext,
-  useSenderContext,
-} from "../../context/UserContext"; // Updated import
+import { useMessageContext, useUserContext } from "../../context/UserContext";
 import { useSocket } from "../../socket";
 import {
-  ALERT,
-  CHAT_JOINED,
-  CHAT_LEAVED,
   NEW_MESSAGE,
   START_TYPING,
   STOP_TYPING,
 } from "../../constants/events.js";
 import { getMessages } from "../apis/api.js";
+import FileMenu from "../ui/dialogs/FileMenu.jsx";
 
 const sendSoundPath = "/sound/send.mp3";
 const receiveSoundPath = "/sound/receive.mp3";
@@ -30,44 +24,40 @@ export default function MessageInput() {
   const [inputValue, setInputValue] = useState("");
   const [sendButtonActive, setSendButtonActive] = useState(false);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
-  const [chosenEmojis, setChosenEmojis] = useState([]);
   const [inputFocus, setInputFocus] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
   const { setMessages } = useMessageContext();
   const { userDetails, chatId, members } = useUserContext();
-  const { selectUserDetails } = useSenderContext();
 
   const theme = useTheme();
   const emojiPickerRef = useRef(null);
   const inputRef = useRef(null);
   const chatBoxRef = useRef(null);
   const [IamTyping, setIamTyping] = useState(false);
-  const [userTyping, setUserTyping] = useState(false);
-  const [page, setPage] = useState(1);
   const typingTimeout = useRef(null);
   const socket = useSocket();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    // Activate send button if there's input or emojis
-    setSendButtonActive(
-      inputValue.trim().length > 0 || chosenEmojis.length > 0
-    );
-  }, [inputValue, chosenEmojis]);
-
-  const isValidMessage = (message) => {
-    return message.trim() !== "";
-  };
+    setSendButtonActive(inputValue.trim().length > 0);
+  }, [inputValue]);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         setLoading(true);
         const data = await getMessages(chatId, page);
-        setMessages((prevMessages) => [...prevMessages, ...data.messages]);
-        setPage(data?.totalPages);
+        const sortedMessages = data.messages.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+        setMessages((prevMessages) => [...prevMessages, ...sortedMessages]);
+
+        if (page < data.totalPages) {
+          setPage(page + 1);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -79,7 +69,6 @@ export default function MessageInput() {
   }, [chatId, page, setMessages]);
 
   useEffect(() => {
-    // Listen for new messages from the socket
     socket.on(NEW_MESSAGE, (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
@@ -106,32 +95,28 @@ export default function MessageInput() {
 
   const handleSendMessage = (event) => {
     if (event && event.key && event.key !== "Enter" && event.type !== "click")
-        return;
+      return;
 
-    if (isValidMessage(inputValue) || chosenEmojis.length > 0) {
-        const message = inputValue + chosenEmojis.join("");
-        if (!message) return;
+    if (inputValue.trim()) {
+      const message = inputValue.trim();
+      socket.emit(NEW_MESSAGE, { chatId, members, message });
 
-        console.log("Sending message:", message);
-        
-        socket.emit(NEW_MESSAGE, { chatId, members, message });
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          content: message,
+          sender: {
+            _id: userDetails?._id,
+            name: userDetails?.username,
+          },
+          chat: chatId,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
 
-        setInputValue("");
-        setChosenEmojis([]);
-        setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-                content: message,
-                sender: {
-                    _id: userDetails?._id,
-                    name: userDetails?.username,
-                },
-                chat: chatId,
-                createdAt: new Date().toISOString(),
-            },
-        ]);
+      setInputValue("");
     }
-};
+  };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -149,11 +134,9 @@ export default function MessageInput() {
     }
   };
 
-  const handleFileOpen = (e) => {};
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     setFileMenuAnchor(e.currentTarget);
-    // Handle the selected file
     console.log("Selected file:", file);
   };
 
@@ -171,6 +154,38 @@ export default function MessageInput() {
     };
   }, []);
 
+  const handleAttachFileClick = (event) => {
+    setFileMenuAnchor(event.currentTarget);
+  };
+
+  const closeFileMenu = () => {
+    setFileMenuAnchor(null);
+  };
+
+  const handleFileUpload = (uploadedFiles) => {
+    uploadedFiles.forEach((file) => {
+      socket.emit(NEW_MESSAGE, {
+        chatId,
+        members,
+        message: file.url, // Assuming file.url is the URL of the uploaded file
+      });
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          attachments: uploadedFiles,
+          sender: {
+            _id: userDetails?._id,
+            name: userDetails?.username,
+          },
+          chat: chatId,
+          createdAt: new Date().toISOString(),
+          type: file.type, // Assuming the backend returns the type of the file (image, video, etc.)
+        },
+      ]);
+    });
+  };
+
   return (
     <div className="chatbox-input" ref={chatBoxRef}>
       <IconButton
@@ -178,16 +193,16 @@ export default function MessageInput() {
           position: "absolute",
           left: "1.0rem",
         }}
-        onClick={() => inputRef.current.click()} // Trigger input file selection
+        onClick={handleAttachFileClick}
       >
-        <input
-          type="file"
-          ref={inputRef}
-          style={{ display: "none" }} // Hide the input element
-          onChange={handleFileInputChange}
-        />
         <AttachFileIcon />
       </IconButton>
+      <FileMenu
+        anchorEl={fileMenuAnchor}
+        onClose={closeFileMenu}
+        onFileUpload={handleFileUpload}
+        chatId={chatId}
+      />
       <IconButton
         sx={{
           position: "absolute",
@@ -211,15 +226,15 @@ export default function MessageInput() {
         placeholder="Type your message..."
         value={inputValue}
         onChange={handleInputChange}
-        onKeyPress={handleKeyPress} // Use onKeyPress instead of onKeyUp
+        onKeyPress={handleKeyPress}
         onFocus={() => setInputFocus(true)}
         onBlur={() => setInputFocus(false)}
-        style={{ width: "100%" }} // Adjust padding to avoid overlap with icons
+        style={{ width: "100%" }}
       />
       {sendButtonActive ? (
         <IconButton
           sx={{ position: "absolute", right: "0.8rem" }}
-          onClick={handleSendMessage} // Pass the event to handleSendMessage
+          onClick={handleSendMessage}
         >
           <SendIcon />
         </IconButton>
