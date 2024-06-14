@@ -40,6 +40,13 @@ export default function MessageInput() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  useEffect(() => {
+    return () => {
+      setMessages([]);
+      setInputValue("");
+      setPage(1);
+    };
+  }, [chatId, setMessages]);
 
   useEffect(() => {
     setSendButtonActive(inputValue.trim().length > 0);
@@ -133,7 +140,6 @@ export default function MessageInput() {
       setInputValue(inputValue + emoji.native);
     }
   };
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
