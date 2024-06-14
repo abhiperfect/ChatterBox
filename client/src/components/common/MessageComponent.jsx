@@ -7,15 +7,15 @@ import RenderAttachment from "./RenderAttachment";
 import { motion } from "framer-motion";
 import { myMessageContainer } from "../../constants/color";
 
-
-const MessageComponent = ({ message, user,senderId }) => {
+const MessageComponent = ({ message, friendDetails, userDetails }) => {
   const { sender, content, attachments = [], createdAt } = message;
-
-  const sameSender = senderId !== user?._id;
+  console.log("friendDetails: ", friendDetails?._id);
+  console.log("userDetails: ", userDetails?._id);
+  const sameSender = userDetails?._id === sender._id;
   const timeAgo = moment(createdAt).fromNow();
 
   return (
-    <div
+    <motion.div
       initial={{ opacity: 0, x: sameSender ? "100%" : "-100%" }}
       animate={{ opacity: 1, x: 0 }}
       style={{
@@ -59,7 +59,7 @@ const MessageComponent = ({ message, user,senderId }) => {
       <Typography variant="caption" color={`${sameSender ? "white" : "black"}`}>
         {timeAgo}
       </Typography>
-    </div>
+    </motion.div>
   );
 };
 

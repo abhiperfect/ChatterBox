@@ -73,16 +73,16 @@ export default function MessageList() {
         <MessageComponent
           key={i?._id}
           message={i}
-          senderId={friendDetails?.userid}
-          user={userDetails}
+          friendDetails={friendDetails}
+          userDetails={userDetails}
         />
       ))}
       {newMessages?.map((i) => (
         <MessageComponent
           key={i?._id}
           message={i}
-          senderId={friendDetails?.userid}
-          user={userDetails}
+          friendDetails={friendDetails}
+          userDetails={userDetails}
         />
       ))}
     </div>
