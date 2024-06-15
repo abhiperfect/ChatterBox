@@ -5,8 +5,8 @@ export const getOtherMember = (members, userId) =>
 
 export const getSockets = (users = []) => {
   // Optional logging for debugging
-  console.log("users: ", users);
-  console.log("userSocketsID", userSocketIDs);
+  // console.log("users: ", users);
+  // console.log("userSocketsID", userSocketIDs);
 
   const sockets = users.map((user) => {
     // Extract the user ID from the user object (assuming it's an object with an _id property)
@@ -14,7 +14,7 @@ export const getSockets = (users = []) => {
     return userSocketIDs.get(userId);
   });
 
-  console.log("sockets: ", sockets);
+  // console.log("sockets: ", sockets);
   return sockets;
 };
 

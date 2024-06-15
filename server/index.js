@@ -94,15 +94,14 @@ io.on("connection", (socket) => {
       chat: chatId,
       createdAt: new Date().toISOString(),
     };
-    console.log("Emitting: ",messageForRealTime);
-    console.log("Members: ", members);
-    console.log("chatId: ", chatId);
+
     const messageForDB = {
       content: message,
       sender: user._id,
       chat: chatId,
     };
 
+    console.log("msg for db: ", messageForDB);
     const membersSocket = getSockets(members);
     io.to(membersSocket).emit(NEW_MESSAGE, {
       chatId,
@@ -110,10 +109,18 @@ io.on("connection", (socket) => {
     });
     io.to(membersSocket).emit(NEW_MESSAGE_ALERT, { chatId });
 
-    try {
-      await Message.create(messageForDB);
-    } catch (error) {
-      throw new Error(error);
+    // Regular expression to detect Cloudinary URLs
+    const cloudinaryUrlPattern = /https:\/\/res\.cloudinary\.com\/[^\s]+/;
+    const isCloudinaryLink = cloudinaryUrlPattern.test(message);
+
+    if (!isCloudinaryLink) {
+      try {
+        await Message.create(messageForDB);
+      } catch (error) {
+        throw new Error(error);
+      }
+    } else {
+      console.log("Message contains a Cloudinary link, not storing in DB");
     }
   });
 
@@ -147,6 +154,7 @@ io.on("connection", (socket) => {
     socket.broadcast.emit(ONLINE_USERS, Array.from(onlineUsers));
   });
 });
+
 
 app.use(errorMiddleware);
 

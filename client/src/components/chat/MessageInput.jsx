@@ -89,22 +89,35 @@ export default function MessageInput() {
 
     const handleNewMessage = ({ chatId, message }) => {
       console.log("chat id: ", chatId);
-      console.log("message: ", message);
-      console.log("message content: ", message.content);
-      console.log("frnd details: ", friendDetails?._id);
+      console.log("friend details: ", friendDetails?._id);
+    
       if (friendDetails?._id === chatId) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            content: message.content,
-            sender: message.sender,
-            chat: chatId,
-            createdAt: new Date().toISOString(),
-          },
-        ]);
+        console.log("message: ", message);
+        console.log("message content: ", message.content);
+    
+        // Regular expression to detect URLs in the message content
+        const urlPattern = /https?:\/\/[^\s]+/;
+        const urls = message.content.match(urlPattern);
+    
+        // Determine if the message content contains URLs
+        const attachments = urls ? urls.map(url => ({ url })) : [];
+    
+        // Create the new message object
+        const newMessage = {
+          _id: message._id,
+          content: urls ? '' : message.content,
+          attachments,
+          sender: message.sender,
+          chat: chatId,
+          createdAt: message.createdAt,
+          updatedAt: message.updatedAt,
+        };
+    
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
-      // setMessages((prevMessages) => [...prevMessages, message]);
     };
+    
+    
 
     const handleNewMessageAlert = ({ chatId }) => {
       const audio = new Audio(receiveSoundPath);
@@ -163,7 +176,7 @@ export default function MessageInput() {
   const handleSendMessage = (event) => {
     if (event && event.key && event.key !== "Enter" && event.type !== "click")
       return;
-
+    console.log("msssssssssssg 1");
     if (inputValue.trim()) {
       const message = inputValue.trim();
       socket.emit(NEW_MESSAGE, { chatId, members, message });
@@ -211,25 +224,12 @@ export default function MessageInput() {
 
   const handleFileUpload = (uploadedFiles) => {
     uploadedFiles.forEach((file) => {
+      console.log("msssssssssssg 2");
       socket.emit(NEW_MESSAGE, {
         chatId,
         members,
         message: file.url, // Assuming file.url is the URL of the uploaded file
       });
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          attachments: [file],
-          sender: {
-            _id: userDetails?._id,
-            name: userDetails?.username,
-          },
-          chat: chatId,
-          createdAt: new Date().toISOString(),
-          type: file.type, // Assuming the backend returns the type of the file (image, video, etc.)
-        },
-      ]);
     });
   };
 
