@@ -11,6 +11,7 @@ import {
   useMessageContext,
   useUserContext,
   useSenderContext,
+  useChatContext
 } from "../../context/UserContext";
 import { useSocket } from "../../socket";
 import {
@@ -33,10 +34,12 @@ export default function MessageInput() {
   const [inputFocus, setInputFocus] = useState(false);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
   const [typingStatus, setTypingStatus] = useState({});
+  const [userInteracted, setUserInteracted] = useState(false);
 
   const { setMessages } = useMessageContext();
   const { userDetails, chatId, members } = useUserContext();
   const { friendDetails, setFriendDetails } = useSenderContext();
+  const { state, setNewMessagesAlert } = useChatContext();
 
   const theme = useTheme();
   const emojiPickerRef = useRef(null);
@@ -88,21 +91,12 @@ export default function MessageInput() {
     if (!socket) return;
 
     const handleNewMessage = ({ chatId, message }) => {
-      console.log("chat id: ", chatId);
-      console.log("friend details: ", friendDetails?._id);
-    
       if (friendDetails?._id === chatId) {
-        console.log("message: ", message);
-        console.log("message content: ", message.content);
-    
-        // Regular expression to detect URLs in the message content
         const urlPattern = /https?:\/\/[^\s]+/;
         const urls = message.content.match(urlPattern);
-    
-        // Determine if the message content contains URLs
+
         const attachments = urls ? urls.map(url => ({ url })) : [];
-    
-        // Create the new message object
+
         const newMessage = {
           _id: message._id,
           content: urls ? '' : message.content,
@@ -112,16 +106,22 @@ export default function MessageInput() {
           createdAt: message.createdAt,
           updatedAt: message.updatedAt,
         };
-    
+
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
-    
-    
 
     const handleNewMessageAlert = ({ chatId }) => {
-      const audio = new Audio(receiveSoundPath);
-      audio.play();
+
+      if (userInteracted ) {
+        const audio = new Audio(receiveSoundPath);
+        audio.play().catch((error) => {
+          console.error("Audio play failed:", error);
+        });
+      }
+      if (chatId === friendDetails?._id) return;
+      setNewMessagesAlert(chatId);
+
     };
 
     const handleTyping = ({ chatId, userId, typing }) => {
@@ -156,7 +156,7 @@ export default function MessageInput() {
       );
       socket.off(ONLINE_USERS, handleOnlineUsers);
     };
-  }, [friendDetails, socket, setMessages]);
+  }, [friendDetails, socket, setMessages, setNewMessagesAlert, userDetails, userInteracted]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -174,9 +174,7 @@ export default function MessageInput() {
   };
 
   const handleSendMessage = (event) => {
-    if (event && event.key && event.key !== "Enter" && event.type !== "click")
-      return;
-    console.log("msssssssssssg 1");
+    if (event && event.key && event.key !== "Enter" && event.type !== "click") return;
     if (inputValue.trim()) {
       const message = inputValue.trim();
       socket.emit(NEW_MESSAGE, { chatId, members, message });
@@ -224,7 +222,6 @@ export default function MessageInput() {
 
   const handleFileUpload = (uploadedFiles) => {
     uploadedFiles.forEach((file) => {
-      console.log("msssssssssssg 2");
       socket.emit(NEW_MESSAGE, {
         chatId,
         members,
@@ -233,8 +230,14 @@ export default function MessageInput() {
     });
   };
 
+  const handleUserInteraction = () => {
+    if (!userInteracted) {
+      setUserInteracted(true);
+    }
+  };
+
   return (
-    <div className="chatbox-input" ref={chatBoxRef}>
+    <div className="chatbox-input" ref={chatBoxRef} onClick={handleUserInteraction}>
       <IconButton
         sx={{
           position: "absolute",

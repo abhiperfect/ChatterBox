@@ -1,6 +1,68 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useReducer,
+} from "react";
 import axios from "axios";
 import { server } from "../constants/config";
+import { getOrSaveFromStorage } from "../lib/features";
+import { NEW_MESSAGE_ALERT } from "../constants/events";
+
+const initialState = {
+  notificationCount: 0,
+  newMessagesAlert: getOrSaveFromStorage({
+    key: NEW_MESSAGE_ALERT,
+    get: true,
+  }) || [
+    {
+      chatId: "",
+      count: 0,
+    },
+  ],
+};
+
+const chatReducer = (state, action) => {
+  switch (action.type) {
+    case "INCREMENT_NOTIFICATION":
+      return {
+        ...state,
+        notificationCount: state.notificationCount + 1,
+      };
+    case "RESET_NOTIFICATION_COUNT":
+      return {
+        ...state,
+        notificationCount: 0,
+      };
+    case "SET_NEW_MESSAGES_ALERT":
+      const chatId = action.payload.chatId;
+      const index = state.newMessagesAlert.findIndex(
+        (item) => item.chatId === chatId
+      );
+      if (index !== -1) {
+        state.newMessagesAlert[index].count += 1;
+      } else {
+        state.newMessagesAlert.push({
+          chatId,
+          count: 1,
+        });
+      }
+      return {
+        ...state,
+        newMessagesAlert: [...state.newMessagesAlert],
+      };
+    case "REMOVE_NEW_MESSAGES_ALERT":
+      return {
+        ...state,
+        newMessagesAlert: state.newMessagesAlert.filter(
+          (item) => item.chatId !== action.payload
+        ),
+      };
+    default:
+      return state;
+  }
+};
 
 const UserContext = createContext();
 const SenderContext = createContext();
@@ -8,6 +70,7 @@ const ComponentContext = createContext();
 const MessageContext = createContext();
 const NotificationsContext = createContext();
 const FileMenuContext = createContext();
+const ChatContext = createContext();
 
 export const UserProvider = ({ children }) => {
   //SENDER CONTEXT
@@ -49,6 +112,25 @@ export const UserProvider = ({ children }) => {
   //FILE MENU CONTEXT
   const [isFileMenuOpen, setIsFileMenuOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  //CHAT CONTEXT
+  const [state, dispatch] = useReducer(chatReducer, initialState);
+
+  const setNewMessagesAlert = (chatId) => {
+    dispatch({ type: "SET_NEW_MESSAGES_ALERT", payload: { chatId } });
+  };
+
+  const removeNewMessagesAlert = (chatId) => {
+    dispatch({ type: "REMOVE_NEW_MESSAGES_ALERT", payload: chatId });
+  };
+
+  const incrementNotification = () => {
+    dispatch({ type: "INCREMENT_NOTIFICATION" });
+  };
+
+  const resetNotificationCount = () => {
+    dispatch({ type: "RESET_NOTIFICATION_COUNT" });
+  };
 
   useEffect(() => {
     const timeOutId = setTimeout(() => {
@@ -121,7 +203,17 @@ export const UserProvider = ({ children }) => {
                   setIsUploading,
                 }}
               >
-                {children}
+                <ChatContext.Provider
+                  value={{
+                    state,
+                    setNewMessagesAlert,
+                    removeNewMessagesAlert,
+                    incrementNotification,
+                    resetNotificationCount,
+                  }}
+                >
+                  {children}
+                </ChatContext.Provider>
               </FileMenuContext.Provider>
             </NotificationsContext.Provider>
           </MessageContext.Provider>
@@ -137,3 +229,4 @@ export const useComponentContext = () => useContext(ComponentContext);
 export const useMessageContext = () => useContext(MessageContext);
 export const useNotificationsContext = () => useContext(NotificationsContext);
 export const useFileMenuContext = () => useContext(FileMenuContext);
+export const useChatContext = () => useContext(ChatContext);
