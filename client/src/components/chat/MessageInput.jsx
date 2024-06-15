@@ -89,7 +89,8 @@ export default function MessageInput() {
 
     const handleNewMessage = ({ chatId, message }) => {
       console.log("chat id: ", chatId);
-      console.log("new msg: ", message.content);
+      console.log("message: ", message);
+      console.log("message content: ", message.content);
       console.log("frnd details: ", friendDetails?._id);
       if (friendDetails?._id === chatId) {
         setMessages((prevMessages) => [
@@ -166,20 +167,6 @@ export default function MessageInput() {
     if (inputValue.trim()) {
       const message = inputValue.trim();
       socket.emit(NEW_MESSAGE, { chatId, members, message });
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          content: message,
-          sender: {
-            _id: userDetails?._id,
-            name: userDetails?.username,
-          },
-          chat: chatId,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
-
       setInputValue("");
     }
   };
