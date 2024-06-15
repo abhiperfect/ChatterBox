@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
@@ -11,7 +11,7 @@ import {
   useMessageContext,
   useUserContext,
   useSenderContext,
-  useChatContext,
+  useChatContext
 } from "../../context/UserContext";
 import { useSocket } from "../../socket";
 import {
@@ -52,6 +52,12 @@ export default function MessageInput() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+
+  // Debounced function to handle setting typing status
+  const debouncedHandleTyping = useCallback(() => {
+    socket.emit(STOP_TYPING, { members, chatId });
+    setIamTyping(false);
+  }, [members, chatId, socket]);
 
   useEffect(() => {
     return () => {
@@ -100,11 +106,11 @@ export default function MessageInput() {
         const urlPattern = /https?:\/\/[^\s]+/;
         const urls = message.content.match(urlPattern);
 
-        const attachments = urls ? urls.map((url) => ({ url })) : [];
+        const attachments = urls ? urls.map(url => ({ url })) : [];
 
         const newMessage = {
           _id: message._id,
-          content: urls ? "" : message.content,
+          content: urls ? '' : message.content,
           attachments,
           sender: message.sender,
           chat: chatId,
@@ -117,14 +123,15 @@ export default function MessageInput() {
     };
 
     const handleNewMessageAlert = ({ chatId }) => {
+      if (chatId === friendDetails?._id) return;
+      setNewMessagesAlert(chatId);
+
       if (userInteracted) {
         const audio = new Audio(receiveSoundPath);
         audio.play().catch((error) => {
           console.error("Audio play failed:", error);
         });
       }
-      if (chatId === friendDetails?._id) return;
-      setNewMessagesAlert(chatId);
     };
 
     const handleTyping = ({ chatId, userId, typing }) => {
@@ -159,14 +166,7 @@ export default function MessageInput() {
       );
       socket.off(ONLINE_USERS, handleOnlineUsers);
     };
-  }, [
-    friendDetails,
-    socket,
-    setMessages,
-    setNewMessagesAlert,
-    userDetails,
-    userInteracted,
-  ]);
+  }, [friendDetails, socket, setMessages, setNewMessagesAlert, userDetails, userInteracted]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -177,15 +177,11 @@ export default function MessageInput() {
 
     if (typingTimeout.current) clearTimeout(typingTimeout.current);
 
-    typingTimeout.current = setTimeout(() => {
-      socket.emit(STOP_TYPING, { members, chatId });
-      setIamTyping(false);
-    }, 2000);
+    typingTimeout.current = setTimeout(debouncedHandleTyping, 2000);
   };
 
   const handleSendMessage = (event) => {
-    if (event && event.key && event.key !== "Enter" && event.type !== "click")
-      return;
+    if (event && event.key && event.key !== "Enter" && event.type !== "click") return;
     if (inputValue.trim()) {
       const message = inputValue.trim();
       socket.emit(NEW_MESSAGE, { chatId, members, message });
@@ -247,12 +243,20 @@ export default function MessageInput() {
     }
   };
 
+  useEffect(() => {
+    document.addEventListener("click", handleUserInteraction);
+    document.addEventListener("keydown", handleUserInteraction);
+    document.addEventListener("mousemove", handleUserInteraction);
+
+    return () => {
+      document.removeEventListener("click", handleUserInteraction);
+      document.removeEventListener("keydown", handleUserInteraction);
+      document.removeEventListener("mousemove", handleUserInteraction);
+    };
+  }, []);
+
   return (
-    <div
-      className="chatbox-input"
-      ref={chatBoxRef}
-      onClick={handleUserInteraction}
-    >
+    <div className="chatbox-input" ref={chatBoxRef}>
       <IconButton
         sx={{
           position: "absolute",

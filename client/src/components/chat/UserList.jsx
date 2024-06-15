@@ -84,8 +84,6 @@ export default function UserList() {
             const newMessageAlert = newMessagesAlert.find(
               ({ chatId }) => chatId === user?._id
             );
-            console.log("user ID:",user?._id);
-            console.log("newMessageAlert: ", newMessageAlert?.count);
             return (
 
 
