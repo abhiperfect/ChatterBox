@@ -77,7 +77,7 @@ function HeaderOfSender({
         backgroundColor: "#EDF2F4",
       }}
     >
-      <Container maxWidth="xl" sx={{ color: "#EF233C" }}>
+      <Container maxWidth="xl" sx={{ color: "#2E86AB" }}>
         <Toolbar disableGutters>
           {handleMobileView && (
             <ArrowBackIosRoundedIcon

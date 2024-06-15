@@ -9,7 +9,7 @@ export default function SimpleContainer({ children, backgroundColor, height ,cur
         <div>
           <Box sx={{
             cursor:cursor,
-            bgcolor: backgroundColor,
+            bgcolor: "#c6e5f1",
             height: height,
             overflow: 'auto',
             '&::-webkit-scrollbar': {

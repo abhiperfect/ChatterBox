@@ -13,11 +13,18 @@ import toast from "react-hot-toast";
 export default function LeftContainer() {
   const { isSearchBarOpen } = useComponentContext();
   const { allUserList, userDetails } = useUserContext();
+  const [ isAdded, setIsAdded ] = useState(false);
+  const [addedUsers, setAddedUsers] = useState({});
 
   const [isLoadingSendFriendRequest, setIsLoadingSendFriendRequest] =
     useState(false);
 
   const addFriendHandler = async (userId, name) => {
+    setAddedUsers((prev) => ({
+      ...prev,
+      [userId]: true,
+    }));
+    // setIsAdded(true);
     setIsLoadingSendFriendRequest(true);
     try {
       // Make a request to the send friend request endpoint
@@ -53,6 +60,7 @@ export default function LeftContainer() {
                   user={user}
                   handler={() => addFriendHandler(user?._id, user?.name)}
                   handlerIsLoading={isLoadingSendFriendRequest}
+                  isAdded={!!addedUsers[user?._id]}
                 />
               ))}
           </Box>
