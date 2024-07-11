@@ -8,12 +8,21 @@ ChatterBox is a modern web application built with React.js and Node.js. It allow
 
 ## Features
 
-**Working on**
-- **Group Chats:** Engage in lively group conversations with friends, family, or colleagues.
 - **Private Messaging:** Have private conversations with individuals in a secure environment.
 - **Media Sharing:** Share photos, videos, and files to enhance communication.
 - **Emoji and Stickers:** Express yourself with a wide range of emojis and stickers.
 - **Multi-device Support:** Stay connected on your desktop, laptop, or mobile device.
+- **User Login and Registration:** Create an account or log in to access ChatterBox.
+- **Search for Users:** Find and connect with other users on the platform.
+- **Friend Requests:** Send and receive friend requests to build your network.
+- **Friend Request Notifications:** Get notified when you receive a friend request.
+- **Accept Friend Requests:** Approve friend requests to connect with others.
+- **Chat List:** View a list of all your active chats.
+- **Send Messages and Attachments:** Share messages, images, videos, audio files, and documents.
+- **Send Emojis:** Enhance your messages with a variety of emojis.
+- **New Message Notifications:** Receive real-time notifications for new messages.
+  **Pending**
+- **Group Chats:** Engage in lively group conversations with friends, family, or colleagues.
 
 ## Tech Stack
 
@@ -24,40 +33,19 @@ ChatterBox is built using the following technologies:
   - Material-UI: A React component library implementing Google's Material Design.
   - Emoji Picker: Library for adding emoji picker functionality to the application.
   - Axios: HTTP client for making API requests to the backend.
-  - Auth0: Authentication and authorization platform for securing the application.
+  - Socket.io Client: Real-time communication library for the client-side.
 
 - **Backend:**
   - Node.js: A JavaScript runtime environment for building server-side applications.
   - Express.js: A web application framework for Node.js, used for building RESTful APIs.
-  - PostgreSQL: A powerful, open-source relational database system for storing user data, messages, and other application information.
-  - Sequelize: An ORM (Object-Relational Mapping) library for Node.js, used to interact with the PostgreSQL database.
-
-**Working on**
-- **Deployment:**
-  - Docker: A containerization platform for packaging applications and their dependencies into containers.
-  - Kubernetes: An open-source container orchestration platform for automating deployment, scaling, and management of containerized applications.
-  - AWS (Amazon Web Services): Cloud services provider used for hosting and deploying the application.
-  - NGINX: A web server and reverse proxy server for serving static content and routing requests to the backend.
-
-
-**Why used this not that**
-WebSocket itself doesn't provide the necessary features for efficient **real-time media streaming**, such as low latency, high throughput, and support for different codecs. For video and audio calls, you'll typically want to use specialized protocols and technologies designed specifically for real-time media streaming, such as WebRTC (Web Real-Time Communication).
-## WebRTC offers several advantages for implementing video and audio call features:
-
-- Low Latency: WebRTC is designed for low-latency communication, making it suitable for real-time applications like video and audio calls.
-
-- High Quality: WebRTC supports high-quality audio and video codecs, ensuring a good user experience during calls.
-
-- Peer-to-Peer Communication: WebRTC allows direct peer-to-peer communication between browsers, reducing the load on servers and improving scalability.
-
-- Security: WebRTC includes built-in security features, such as encryption, to ensure the privacy and security of communication.
-
-- Cross-Platform Support: WebRTC is supported by most modern web browsers and mobile platforms, making it suitable for building cross-platform applications.
-
+  - MongoDB: NoSQL database for storing user data and messages.
+  - Socket.io: Real-time communication library for the server-side.
+  - Cloudinary: A cloud-based image and video management service.
+  - Bcrypt: A library for hashing passwords.
+  - Moment.js: A library for parsing, validating, manipulating, and formatting dates.
 
 ## Getting Started
 
-**Working on**
 To get started with ChatterBox, simply [sign up](#) for an account or [log in](#) if you're already a member. Once logged in, you can start exploring the various features and functionalities of the application.
 
 ## Contributing
