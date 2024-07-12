@@ -152,4 +152,6 @@ app.use(errorMiddleware);
 server.listen(port, () => {
   console.log(`Server is running on port ${port} in ${envMode} Mode`);
 });
+// Correctly export the server instance
+export default server;
 export { adminSecretKey, envMode, userSocketIDs };
