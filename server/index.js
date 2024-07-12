@@ -150,7 +150,7 @@ io.on("connection", (socket) => {
 app.use(errorMiddleware);
 
 
-// Check if the server is already listening before starting it
+// Ensure the server only starts listening once
 if (!global.serverListening) {
   server.listen(port, () => {
     console.log(`Server is running on port ${port} in ${envMode} Mode`);
@@ -159,5 +159,5 @@ if (!global.serverListening) {
 }
 
 // Correctly export the server instance
-export default server;
+// export default server;
 export { adminSecretKey, envMode, userSocketIDs };
