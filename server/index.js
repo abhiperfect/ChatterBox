@@ -151,11 +151,13 @@ app.use(errorMiddleware);
 
 
 // Check if the server is already listening before starting it
-if (!server.listening) {
+if (!global.serverListening) {
   server.listen(port, () => {
     console.log(`Server is running on port ${port} in ${envMode} Mode`);
+    global.serverListening = true; // Set the global variable to true
   });
 }
+
 // Correctly export the server instance
 export default server;
 export { adminSecretKey, envMode, userSocketIDs };
