@@ -151,13 +151,11 @@ app.use(errorMiddleware);
 
 
 // Ensure the server only starts listening once
-if (!global.serverListening) {
+
   server.listen(port, () => {
     console.log(`Server is running on port ${port} in ${envMode} Mode`);
-    global.serverListening = true; // Set the global variable to true
   });
-}
 
 // Correctly export the server instance
-// export default server;
+export default server;
 export { adminSecretKey, envMode, userSocketIDs };
